@@ -24,7 +24,7 @@ const projects: Project[] = [
     subtitle: 'Intelligent Automation Suite',
     description:
       'An end-to-end test automation framework built using Playwright and integrated with Allure Reporting. Leverages OpenAI API to enhance test creation, analysis, and maintenance through AI-driven automation. Features automatic test execution via GitHub Actions CI/CD pipeline with live Allure reports deployed to GitHub Pages.',
-    image: '/project-1.jpg',
+    image: `${import.meta.env.BASE_URL}project-1.jpg`,
     tags: ['Playwright', 'OpenAI API', 'Allure', 'GitHub Actions', 'TypeScript'],
     icon: Sparkles,
     links: {
@@ -37,7 +37,7 @@ const projects: Project[] = [
     subtitle: 'Enterprise Deployment Validation',
     description:
       'A comprehensive CI/CD pipeline system that automates the entire deployment validation process. Integrates with multiple testing frameworks including Selenium, Appium, and API testing tools. Features real-time monitoring, automatic rollback on failure, and detailed reporting dashboards.',
-    image: '/project-2.jpg',
+    image: `${import.meta.env.BASE_URL}project-2.jpg`,
     tags: ['Docker', 'Kubernetes', 'Jenkins', 'Selenium', 'REST APIs'],
     icon: Zap,
     links: {
@@ -50,7 +50,7 @@ const projects: Project[] = [
     subtitle: 'Gemini-Powered Image Validation',
     description:
       'An innovative testing platform that uses Google Gemini AI for intelligent image recognition and validation. Capable of detecting UI anomalies, validating map renderings, and performing visual regression testing with human-like perception accuracy.',
-    image: '/project-1.jpg',
+    image: `${import.meta.env.BASE_URL}project-1.jpg`,
     tags: ['Gemini AI', 'Python', 'Appium', 'Computer Vision', 'Cloud'],
     icon: Shield,
     links: {
