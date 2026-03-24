@@ -73,53 +73,6 @@ export function Hero() {
         '-=0.2'
       );
 
-      const scrollTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: '+=100%',
-          pin: true,
-          scrub: 0.5,
-        },
-      });
-
-      scrollTl.fromTo(
-        title,
-        { scale: 1, yPercent: 0, opacity: 1 },
-        {
-          scale: 0.9,
-          yPercent: -5,
-          opacity: 0,
-          ease: 'power2.inOut',
-          immediateRender: false,
-        },
-        0
-      );
-
-
-
-      scrollTl.fromTo(
-        scrollIndicator,
-        { opacity: 1 },
-        {
-          opacity: 0,
-          ease: 'power2.inOut',
-          immediateRender: false,
-        },
-        0
-      );
-
-      scrollTl.fromTo(
-        [subtitle, cta, socials],
-        { opacity: 1, yPercent: 0 },
-        {
-          opacity: 0,
-          yPercent: 5,
-          ease: 'power2.inOut',
-          immediateRender: false,
-        },
-        0
-      );
     }, section);
 
     return () => ctx.revert();
@@ -171,9 +124,12 @@ export function Hero() {
           ref={titleRef}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-4"
         >
-          <span className="block">{splitText('TEST AUTOMATION ENGINEER')}</span>
-           <span className="block">{splitText('AND')}</span>
-          <span className="block">{splitText('SHOPIFY DEVELOPER')}</span>
+          <div className="mb-2 md:mb-0">
+            <span className="block md:inline-block md:mr-4">{splitText('TEST')}</span>
+            <span className="block md:inline-block">{splitText('AUTOMATION ENGINEER')}</span>
+          </div>
+          <span className="block my-2 md:my-0">{splitText('AND')}</span>
+          <span className="block mb-2 md:mb-0">{splitText('SHOPIFY DEVELOPER')}</span>
           <span className="block text-gradient">{splitText('QA ENGINEER')}</span>
         </h1>
 
