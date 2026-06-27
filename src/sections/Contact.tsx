@@ -249,13 +249,6 @@ export function Contact() {
             <p className="text-slate-600 text-sm">
               © {new Date().getFullYear()} All rights reserved.
             </p>
-
-            <div className="flex items-center gap-2 text-slate-500 text-sm">
-              <span>Built with</span>
-              <span className="text-indigo-400">React</span>
-              <span>+</span>
-              <span className="text-cyan-400">GSAP</span>
-            </div>
           </div>
         </footer>
       </div>
