@@ -129,7 +129,7 @@ export function About() {
 
             <div className="relative aspect-square rounded-full overflow-hidden m-1">
               <img
-                src="profile.png"
+                src={`${import.meta.env.BASE_URL}profile.jpg`}
                 alt="Ramon Tomaquin"
                 className="w-full h-full object-cover"
               />
