@@ -122,15 +122,14 @@ export function Hero() {
       <div className="relative z-10 text-center px-4 pb-20">
         <h1
           ref={titleRef}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-4"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-7xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-4"
         >
           <div className="mb-2 md:mb-0">
             <span className="block md:inline-block md:mr-4">{splitText('TEST')}</span>
             <span className="block md:inline-block">{splitText('AUTOMATION ENGINEER')}</span>
           </div>
           <span className="block my-2 md:my-0">{splitText('AND')}</span>
-          <span className="block mb-2 md:mb-0">{splitText('SOFTWARE DEVELOPMENT ENGINEER')}</span>
-          <span className="block mb-2 md:mb-0">{splitText('IN TEST')}</span>
+          <span className="block mb-2 md:mb-0">{splitText('SOFTWARE DEVELOPMENT ENGINEER IN TEST')}</span>
         </h1>
 
         <p
