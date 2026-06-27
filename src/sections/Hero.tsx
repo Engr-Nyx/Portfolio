@@ -129,7 +129,7 @@ export function Hero() {
             <span className="block md:inline-block">{splitText('AUTOMATION ENGINEER')}</span>
           </div>
           <span className="block my-2 md:my-0">{splitText('AND')}</span>
-          <span className="block mb-2 md:mb-0">{splitText('SOFTWARE DEVELOPMENT ENGINEER IN TEST')}</span>
+          <span className="block mb-2 md:mb-0">{splitText('SDET')}</span>
           <span className="block text-gradient">{splitText('QA ENGINEER')}</span>
         </h1>
 
