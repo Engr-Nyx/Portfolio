@@ -29,7 +29,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     title: 'Automation Developer',
-    company: 'Cognizant (Google)',
+    company: 'Waze (through Cognizant)',
     location: 'BGC, Metro Manila',
     period: 'Aug 2025 - Present',
     description: [
@@ -42,7 +42,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     title: 'Sr. Automation Engineer',
-    company: 'Accenture (Xcel Energy)',
+    company: 'Xcel Energy (through Accenture))',
     location: 'Mandaluyong, Metro Manila',
     period: 'Sep 2024 - Aug 2025',
     description: [
@@ -55,7 +55,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     title: 'Automation Tester',
-    company: 'WeSupport, Inc. (TechMahindra)',
+    company: 'Globe Telecom (through WeSupport Inc.)',
     location: 'Makati, Metro Manila',
     period: 'May 2023 - Aug 2024',
     description: [
@@ -202,18 +202,16 @@ export function Experience() {
               return (
                 <div
                   key={`${exp.company}-${exp.period}`}
-                  className={`experience-card relative flex flex-col sm:flex-row items-start gap-8 ${
-                    isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'
-                  }`}
+                  className={`experience-card relative flex flex-col sm:flex-row items-start gap-8 ${isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'
+                    }`}
                 >
                   <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
 
                   <div
-                    className={`ml-12 sm:ml-0 sm:w-[calc(50%-2rem)] ${
-                      isLeft ? 'sm:pr-8' : 'sm:pl-8'
-                    }`}
+                    className={`ml-12 sm:ml-0 sm:w-[calc(50%-2rem)] ${isLeft ? 'sm:pr-8' : 'sm:pl-8'
+                      }`}
                   >
-                    <div 
+                    <div
                       className="glass p-6 rounded-2xl hover:glow-primary transition-all duration-300 group cursor-pointer"
                       onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
                     >
@@ -227,8 +225,8 @@ export function Experience() {
                             <span className="font-medium select-none">{exp.company}</span>
                           </div>
                         </div>
-                        <ChevronDown 
-                          size={20} 
+                        <ChevronDown
+                          size={20}
                           className={`flex-shrink-0 text-slate-400 transition-transform duration-300 ${expandedIndex === index ? 'rotate-180 text-cyan-400' : ''}`}
                         />
                       </div>
@@ -244,10 +242,9 @@ export function Experience() {
                         </div>
                       </div>
 
-                      <div 
-                        className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-in-out ${
-                          expandedIndex === index ? 'grid-rows-[1fr] opacity-100 mb-4' : 'grid-rows-[0fr] opacity-0 mb-0'
-                        }`}
+                      <div
+                        className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-in-out ${expandedIndex === index ? 'grid-rows-[1fr] opacity-100 mb-4' : 'grid-rows-[0fr] opacity-0 mb-0'
+                          }`}
                       >
                         <div className="overflow-hidden">
                           <ul className="space-y-2 py-2">
