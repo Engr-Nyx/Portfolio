@@ -42,7 +42,7 @@ const experiences: ExperienceItem[] = [
   },
   {
     title: 'Sr. Automation Engineer',
-    company: 'Xcel Energy (through Accenture))',
+    company: 'Xcel Energy (through Accenture)',
     location: 'Mandaluyong, Metro Manila',
     period: 'Sep 2024 - Aug 2025',
     description: [
