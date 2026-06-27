@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { NotFound } from './components/NotFound.tsx'
 
-const is404 = window.location.pathname === '/404';
+const is404 = window.location.pathname.endsWith('/404') || window.location.pathname.endsWith('/404.html');
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

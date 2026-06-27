@@ -28,7 +28,7 @@ const projects: Project[] = [
     tags: ['Playwright', 'OpenAI API', 'Allure', 'GitHub Actions', 'TypeScript'],
     icon: Sparkles,
     links: {
-      demo: '/404',
+      demo: 'https://engr-nyx.github.io/PlaywrightAutomation/',
       github: 'https://github.com/Engr-Nyx/PlaywrightAutomation',
     },
   },
@@ -41,8 +41,8 @@ const projects: Project[] = [
     tags: ['Docker', 'Kubernetes', 'Jenkins', 'Selenium', 'REST APIs'],
     icon: Zap,
     links: {
-      demo: '/404',
-      github: '/404',
+      demo: `${import.meta.env.BASE_URL}404`,
+      github: `${import.meta.env.BASE_URL}404`,
     },
   },
   {
@@ -54,8 +54,8 @@ const projects: Project[] = [
     tags: ['Gemini AI', 'Python', 'Appium', 'Computer Vision', 'Cloud'],
     icon: Shield,
     links: {
-      demo: '/404',
-      github: '/404',
+      demo: `${import.meta.env.BASE_URL}404`,
+      github: `${import.meta.env.BASE_URL}404`,
     },
   },
 ];
@@ -89,12 +89,12 @@ export function Projects() {
       );
 
       const cards = cardsContainer.querySelectorAll('.project-card');
-      
+
       cards.forEach((card, i) => {
         gsap.fromTo(
           card,
-          { 
-            y: 100, 
+          {
+            y: 100,
             opacity: 0,
             rotateX: 15,
           },
@@ -176,7 +176,7 @@ export function Projects() {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/50 to-transparent" />
-                    
+
                     <div className="absolute top-4 left-4 p-3 glass-strong rounded-xl">
                       <Icon className="text-indigo-400" size={24} />
                     </div>
