@@ -161,13 +161,15 @@ export function RecruiterMode({ isOpen, onClose }: RecruiterModeProps) {
               <FileDown size={16} className="text-indigo-400" />
               Direct Documents
             </h3>
-            <Button 
+            <a 
+              href={`${import.meta.env.BASE_URL}resume.pdf`}
+              download="Ramon_Tomaquin_Resume.pdf"
               className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold h-14 flex items-center justify-center gap-2 rounded-2xl shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
-              onClick={() => window.open(`${import.meta.env.BASE_URL}resume.pdf`, '_blank')}
+              data-cursor-hover
             >
               <FileDown size={18} />
               Download PDF Resume
-            </Button>
+            </a>
           </div>
 
           {/* JD Matcher */}
