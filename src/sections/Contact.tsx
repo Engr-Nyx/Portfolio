@@ -73,7 +73,7 @@ export function Contact() {
       icon: MapPin,
       label: 'Location',
       value: 'Taguig, Metro Manila',
-      href: '#',
+      href: 'https://maps.google.com/?q=Taguig,+Metro+Manila',
     },
   ];
 
@@ -94,8 +94,8 @@ export function Contact() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl animate-pulse-glow" style={{ animationDelay: '1s' }} />
       </div>
 
-      <div ref={contentRef} className="w-full max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-16">
+      <div ref={contentRef} className="w-full max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+        <div className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />
             <span className="text-cyan-400 mono text-sm tracking-widest">CONNECT</span>
@@ -119,10 +119,13 @@ export function Contact() {
             <div className="space-y-4 mb-8">
               {contactInfo.map((item) => {
                 const Icon = item.icon;
+                const isWebLink = item.href.startsWith('http');
                 return (
                   <a
                     key={item.label}
                     href={item.href}
+                    target={isWebLink ? '_blank' : undefined}
+                    rel={isWebLink ? 'noopener noreferrer' : undefined}
                     className="flex items-center gap-4 p-4 glass rounded-xl hover:glow-primary transition-all group"
                     data-cursor-hover
                   >

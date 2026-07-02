@@ -135,10 +135,10 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative min-h-screen py-20 z-40"
+      className="relative min-h-screen py-24 md:py-32 z-40"
     >
       <div className="w-full max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={titleRef} className="text-center mb-16">
+        <div ref={titleRef} className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />
             <span className="text-cyan-400 mono text-sm tracking-widest">PORTFOLIO</span>
@@ -210,6 +210,8 @@ export function Projects() {
                       {project.links.demo && (
                         <a
                           href={project.links.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-cyan-500 text-white text-sm font-medium rounded-full hover:opacity-90 transition-opacity"
                           data-cursor-hover
                         >
@@ -220,6 +222,8 @@ export function Projects() {
                       {project.links.github && (
                         <a
                           href={project.links.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="flex items-center gap-2 px-4 py-2 glass text-slate-300 text-sm font-medium rounded-full hover:text-white transition-colors"
                           data-cursor-hover
                         >

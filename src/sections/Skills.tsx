@@ -117,14 +117,48 @@ export function Skills() {
     });
   }, [filteredSkills]);
 
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = -(y - centerY) / 8;
+    const rotateY = (x - centerX) / 8;
+    
+    gsap.to(card, {
+      rotateX: rotateX,
+      rotateY: rotateY,
+      transformPerspective: 500,
+      duration: 0.2,
+      ease: 'power2.out',
+      overwrite: 'auto'
+    });
+  };
+
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    setHoveredSkill(null);
+    gsap.to(card, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.4,
+      ease: 'power2.out',
+      overwrite: 'auto'
+    });
+  };
+
   return (
     <section
       ref={sectionRef}
       id="skills"
-      className="relative min-h-screen pt-24 pb-20 z-30 flex flex-col justify-center"
+      className="relative min-h-screen py-24 md:py-32 z-30 flex flex-col justify-center"
     >
       <div className="w-full max-w-7xl 2xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div ref={titleRef} className="text-center mb-12">
+        <div ref={titleRef} className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />
             <span className="text-cyan-400 mono text-sm tracking-widest">EXPERTISE</span>
@@ -170,12 +204,13 @@ export function Skills() {
                 key={skill.name}
                 className="skill-card relative group"
                 onMouseEnter={() => setHoveredSkill(skill.name)}
-                onMouseLeave={() => setHoveredSkill(null)}
                 data-cursor-hover
               >
                 <div
+                  onMouseMove={handleCardMouseMove}
+                  onMouseLeave={handleCardMouseLeave}
                   className={`relative p-4 glass rounded-2xl transition-all duration-300 ${
-                    isHovered ? 'scale-110 glow-primary' : ''
+                    isHovered ? 'scale-105 glow-primary z-10' : ''
                   }`}
                 >
                   <div className="flex justify-center mb-2">

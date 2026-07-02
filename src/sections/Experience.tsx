@@ -95,10 +95,23 @@ const experiences: ExperienceItem[] = [
 
 export function Experience() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<string>('All');
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+
+  const matchesSkill = (exp: ExperienceItem, skill: string) => {
+    if (skill === 'All') return true;
+    if (skill === 'CI/CD') {
+      return exp.highlights.some(h => 
+        h.toLowerCase().includes('ci/cd') || 
+        h.toLowerCase().includes('actions') || 
+        h.toLowerCase().includes('kokoro')
+      );
+    }
+    return exp.highlights.some(h => h.toLowerCase().includes(skill.toLowerCase()));
+  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -168,10 +181,10 @@ export function Experience() {
     <section
       ref={sectionRef}
       id="experience"
-      className="relative min-h-screen py-20 z-20"
+      className="relative min-h-screen py-24 md:py-32 z-20"
     >
       <div className="w-full max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={titleRef} className="text-center mb-16">
+        <div ref={titleRef} className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />
             <span className="text-cyan-400 mono text-sm tracking-widest">JOURNEY</span>
@@ -182,15 +195,32 @@ export function Experience() {
             Career <span className="text-gradient">Path</span>
           </h2>
 
-          <p className="text-slate-400 max-w-2xl mx-auto">
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8">
             A timeline of my professional growth, from trainee to senior automation engineer.
           </p>
+
+          <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
+            {['All', 'Appium', 'Playwright', 'Selenium', 'Java', 'Python', 'TypeScript', 'CI/CD', 'Odoo'].map((skill) => (
+              <button
+                key={skill}
+                onClick={() => setSelectedSkill(skill)}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  selectedSkill === skill
+                    ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]'
+                    : 'glass text-slate-400 hover:text-white'
+                }`}
+                data-cursor-hover
+              >
+                {skill}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div ref={timelineRef} className="relative">
           <div
             ref={lineRef}
-            className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 origin-top hidden sm:block"
+            className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 origin-top hidden sm:block"
           />
 
           <div className="absolute left-4 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 sm:hidden" />
@@ -198,12 +228,14 @@ export function Experience() {
           <div className="space-y-12">
             {experiences.map((exp, index) => {
               const isLeft = index % 2 === 0;
+              const isMatched = matchesSkill(exp, selectedSkill);
 
               return (
                 <div
                   key={`${exp.company}-${exp.period}`}
-                  className={`experience-card relative flex flex-col sm:flex-row items-start gap-8 ${isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'
-                    }`}
+                  className={`experience-card relative flex flex-col sm:flex-row items-start gap-8 transition-all duration-500 ${
+                    isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'
+                  } ${isMatched ? 'opacity-100 scale-100' : 'opacity-10 scale-95 pointer-events-none'}`}
                 >
                   <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
 

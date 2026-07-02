@@ -120,7 +120,7 @@ export function About() {
       id="about"
       className="relative min-h-screen flex items-center z-20"
     >
-      <div className="w-full max-w-7xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="w-full max-w-7xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div ref={imageRef} className="relative max-w-[300px] sm:max-w-[380px] lg:max-w-[480px] mx-auto">
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500 animate-spin-slow p-1">

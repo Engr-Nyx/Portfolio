@@ -19,7 +19,7 @@ const achievements = [
   {
     icon: Star,
     title: 'Organization President',
-    description: 'JUNIOR INFORMATION SYSTEMS SECURITY ASSOCIATION (2018-2020)',
+    description: 'Junior Information Systems Security Association (2018-2020)',
   },
   {
     icon: Users,
@@ -63,11 +63,11 @@ export function Education() {
     <section
       ref={sectionRef}
       id="education"
-      className="relative py-20 z-20"
+      className="relative py-24 md:py-32 z-20"
     >
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={contentRef}>
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 md:mb-20">
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />
               <span className="text-cyan-400 mono text-sm tracking-widest">BACKGROUND</span>
