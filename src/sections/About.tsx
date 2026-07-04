@@ -67,9 +67,9 @@ export function About() {
       gsap.fromTo(
         image,
         { x: -50, opacity: 0 },
-        { 
-          x: 0, 
-          opacity: 1, 
+        {
+          x: 0,
+          opacity: 1,
           duration: 0.8,
           ease: 'power3.out',
           scrollTrigger: {
@@ -82,9 +82,9 @@ export function About() {
       gsap.fromTo(
         content,
         { x: 50, opacity: 0 },
-        { 
-          x: 0, 
-          opacity: 1, 
+        {
+          x: 0,
+          opacity: 1,
           duration: 0.8,
           ease: 'power3.out',
           scrollTrigger: {
@@ -97,10 +97,10 @@ export function About() {
       gsap.fromTo(
         stats.children,
         { y: 30, opacity: 0 },
-        { 
-          y: 0, 
-          opacity: 1, 
-          stagger: 0.1, 
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.1,
           duration: 0.6,
           ease: 'power2.out',
           scrollTrigger: {
@@ -182,13 +182,13 @@ export function About() {
             <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div className="glass p-4 rounded-2xl text-center">
                 <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
-                  <Counter end={5} suffix="+" />
+                  <Counter end={4} suffix="+" />
                 </div>
                 <div className="text-xs text-slate-500 mono">YEARS EXP</div>
               </div>
               <div className="glass p-4 rounded-2xl text-center">
                 <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
-                  <Counter end={50} suffix="+" />
+                  <Counter end={10} suffix="+" />
                 </div>
                 <div className="text-xs text-slate-500 mono">PROJECTS</div>
               </div>
