@@ -1,52 +1,186 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { 
-  Code2, 
-  TestTube, 
-  GitBranch, 
-  Database, 
-  Terminal, 
-  Cpu,
-  Layers,
-  Workflow,
-  Box,
-  Globe,
-  Smartphone,
-  Monitor
-} from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface Skill {
   name: string;
-  icon: React.ElementType;
+  svgPath: string;
+  color: string;
   category: string;
   level: number;
 }
 
+// Brand SVG paths from Simple Icons (https://simpleicons.org/)
 const skills: Skill[] = [
-  { name: 'Java', icon: Code2, category: 'Languages', level: 95 },
-  { name: 'Python', icon: Terminal, category: 'Languages', level: 90 },
-  { name: 'TypeScript', icon: Code2, category: 'Languages', level: 88 },
-  { name: 'JavaScript', icon: Code2, category: 'Languages', level: 85 },
-  { name: 'Selenium', icon: TestTube, category: 'Testing', level: 95 },
-  { name: 'Appium', icon: Smartphone, category: 'Testing', level: 92 },
-  { name: 'Playwright', icon: Monitor, category: 'Testing', level: 90 },
-  { name: 'WebDriverIO', icon: Globe, category: 'Testing', level: 88 },
-  { name: 'Perfecto', icon: TestTube, category: 'Testing', level: 85 },
-  { name: 'Digital.ai', icon: Layers, category: 'Testing', level: 82 },
-  { name: 'Git', icon: GitBranch, category: 'DevOps', level: 92 },
-  { name: 'GitHub', icon: GitBranch, category: 'DevOps', level: 90 },
-  { name: 'GitLab', icon: GitBranch, category: 'DevOps', level: 88 },
-  { name: 'Docker', icon: Box, category: 'DevOps', level: 80 },
-  { name: 'CI/CD', icon: Workflow, category: 'DevOps', level: 85 },
-  { name: 'Linux', icon: Terminal, category: 'Systems', level: 88 },
-  { name: 'Odoo', icon: Database, category: 'Systems', level: 85 },
-  { name: 'AI Testing', icon: Cpu, category: 'Emerging', level: 82 },
+  {
+    name: 'Java',
+    svgPath: 'M8.851 18.56s-.917.534.653.714c1.902.218 2.874.187 4.969-.211 0 0 .552.346 1.321.646-4.699 2.013-10.633-.118-6.943-1.149M8.276 15.933s-1.028.761.542.924c2.032.209 3.636.227 6.413-.308 0 0 .384.389.987.602-5.679 1.661-12.007.13-7.942-1.218M13.116 11.475c1.158 1.333-.304 2.533-.304 2.533s2.939-1.518 1.589-3.418c-1.261-1.772-2.228-2.652 3.007-5.688 0 0-8.216 2.051-4.292 6.573M19.33 20.504s.679.559-.747.991c-2.712.822-11.288 1.069-13.669.033-.856-.373.75-.89 1.254-.998.527-.114.828-.093.828-.093-.953-.671-6.156 1.317-2.643 1.887 9.58 1.553 17.462-.7 14.977-1.82M9.292 13.21s-4.362 1.036-1.544 1.412c1.189.159 3.561.123 5.77-.062 1.806-.152 3.618-.477 3.618-.477s-.637.272-1.098.587c-4.429 1.165-12.986.623-10.522-.568 2.082-1.006 3.776-.892 3.776-.892M17.116 17.584c4.503-2.34 2.421-4.589.968-4.285-.355.074-.515.138-.515.138s.132-.207.385-.297c2.875-1.011 5.086 2.981-.928 4.562 0 .001.07-.062.09-.118M14.401 0s2.494 2.494-2.365 6.33c-3.896 3.077-.888 4.832-.001 6.836-2.274-2.053-3.943-3.858-2.824-5.539 1.644-2.469 6.197-3.665 5.19-7.627M9.734 23.924c4.322.277 10.959-.153 11.116-2.198 0 0-.302.775-3.572 1.391-3.688.694-8.239.613-10.937.168 0-.001.553.457 3.393.639',
+    color: '#E51F24',
+    category: 'Languages',
+    level: 95,
+  },
+  {
+    name: 'Python',
+    svgPath: 'M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05 1.07.13zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09-.33.22zM21.1 6.11l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.04zM9.9 12.44l.23-.33.08-.41-.08-.41-.23-.33-.33-.22-.41-.1-.41.1-.33.22-.23.33-.08.41.08.41.23.33.33.22.41.1.41-.1.33-.22z',
+    color: '#3776AB',
+    category: 'Languages',
+    level: 90,
+  },
+  {
+    name: 'TypeScript',
+    svgPath: 'M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z',
+    color: '#3178C6',
+    category: 'Languages',
+    level: 88,
+  },
+  {
+    name: 'JavaScript',
+    svgPath: 'M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z',
+    color: '#F7DF1E',
+    category: 'Languages',
+    level: 85,
+  },
+  {
+    name: 'Selenium',
+    svgPath: 'M13.693 0c-.203.445-.322.94-.322 1.464 0 1.138.533 2.15 1.362 2.804C10.147 5.017 6.5 8.952 6.5 13.75c0 4.97 3.894 9.07 8.778 9.42a6.75 6.75 0 0 1-2.028 1.053l-.25.073V24a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-.704l-.25-.073A6.76 6.76 0 0 1 16.722 22H19.5a.5.5 0 0 0 .5-.5V20a.5.5 0 0 0-.5-.5H13a.5.5 0 0 0-.5.5v1.5a.5.5 0 0 0 .5.5h1.5a5.737 5.737 0 0 0 1.207-1.199A8.46 8.46 0 0 0 17 20.5a8.5 8.5 0 1 0-4.5-15.68 3.964 3.964 0 0 1-1.806-3.356c0-.55.12-1.073.336-1.544A.5.5 0 0 0 10.58 0h-1c-.2 0-.37.12-.45.306zM17 7a6.5 6.5 0 1 1 0 13A6.5 6.5 0 0 1 17 7z',
+    color: '#43B02A',
+    category: 'Testing',
+    level: 95,
+  },
+  {
+    name: 'Appium',
+    svgPath: 'M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 3a7 7 0 1 0 0 14A7 7 0 0 0 12 5zm0 2a5 5 0 1 1 0 10A5 5 0 0 1 12 7zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    color: '#662D91',
+    category: 'Testing',
+    level: 92,
+  },
+  {
+    name: 'Playwright',
+    svgPath: 'M12.032 0C5.38 0 0 5.38 0 12.032s5.38 12.032 12.032 12.032 12.032-5.38 12.032-12.032S18.683 0 12.032 0zM9.93 16.08c-.57.37-1.31.14-1.65-.51L5.04 9.7c-.35-.65-.15-1.44.45-1.76.6-.32 1.35-.08 1.65.56l2.76 5.18 5.28-8.26c.37-.57 1.1-.74 1.65-.37.55.37.7 1.1.33 1.67L9.93 16.08zm9.29-5.79c-.12.65-.74 1.08-1.4.96-.66-.12-1.08-.74-.96-1.4.12-.65.74-1.08 1.4-.96.66.12 1.08.74.96 1.4z',
+    color: '#2EAD33',
+    category: 'Testing',
+    level: 90,
+  },
+  {
+    name: 'WebdriverIO',
+    svgPath: 'M11.998 0C5.366 0 0 5.367 0 12c0 6.633 5.367 12 11.998 12C18.63 24 24 18.633 24 12c0-6.633-5.37-12-12.002-12zm6.44 7.14l-1.5 9.157-5.808-7.655 7.308-1.502zM6.02 7.89l7.31 1.5-5.81 7.654L6.02 7.89zM12 9.364l4.264 5.637H7.736L12 9.364z',
+    color: '#EA5906',
+    category: 'Testing',
+    level: 88,
+  },
+  {
+    name: 'Perfecto',
+    svgPath: 'M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 2c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 12 6zm-1 2h2v5h-2V8zm0 6h2v2h-2v-2z',
+    color: '#00B0FF',
+    category: 'Testing',
+    level: 85,
+  },
+  {
+    name: 'Digital.ai',
+    svgPath: 'M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm1 5v6h6v2h-6v6h-2v-6H5v-2h6V5h2z',
+    color: '#6E44FF',
+    category: 'Testing',
+    level: 82,
+  },
+  {
+    name: 'Git',
+    svgPath: 'M23.546 10.93L13.067.452c-.604-.604-1.582-.604-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.604 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.604-.404-.541-.541-.674-1.336-.404-1.996L7.614 3.675 .45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187',
+    color: '#F05032',
+    category: 'DevOps',
+    level: 92,
+  },
+  {
+    name: 'GitHub',
+    svgPath: 'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12',
+    color: '#181717',
+    category: 'DevOps',
+    level: 90,
+  },
+  {
+    name: 'GitLab',
+    svgPath: 'M23.955 13.587l-1.342-4.135-2.664-8.189a.455.455 0 0 0-.867 0L16.418 9.45H7.582L4.918 1.263a.455.455 0 0 0-.867 0L1.386 9.45.044 13.587a.924.924 0 0 0 .331 1.023L12 23.054l11.625-8.443a.924.924 0 0 0 .33-1.024',
+    color: '#FC6D26',
+    category: 'DevOps',
+    level: 88,
+  },
+  {
+    name: 'Docker',
+    svgPath: 'M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.186.186 0 0 0-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 0 0-.75.748 11.376 11.376 0 0 0 .692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 0 0 3.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z',
+    color: '#2496ED',
+    category: 'DevOps',
+    level: 80,
+  },
+  {
+    name: 'CI/CD',
+    svgPath: 'M12 0C5.372 0 0 5.373 0 12s5.372 12 12 12 12-5.373 12-12S18.628 0 12 0zm4.927 6.16h1.23v2.46h-1.23V6.16zm-9.854 0h1.23v2.46H7.073V6.16zM12 17.08a5.08 5.08 0 1 1 0-10.16 5.08 5.08 0 0 1 0 10.16zm0-8.62a3.54 3.54 0 1 0 0 7.08 3.54 3.54 0 0 0 0-7.08zm0 2.31a1.23 1.23 0 1 1 0 2.46 1.23 1.23 0 0 1 0-2.46z',
+    color: '#2088FF',
+    category: 'DevOps',
+    level: 85,
+  },
+  {
+    name: 'Linux',
+    svgPath: 'M12.504 0c-.155 0-.315.008-.480.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 0 0-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.138.94-.457 1.224-.98.264-.482.395-1.13.498-1.857.784-.6 1.389-1.514 1.518-2.418.03-.188.044-.38.035-.57-.006-.22-.036-.44-.055-.65-.031-.33-.032-.663.021-.994.02-.168.055-.336.108-.5.06-.167.15-.334.258-.494.108-.157.228-.306.35-.444.49-.554.806-1.197.806-2.084 0-.855-.4-1.79-1.088-2.73-.688-.938-1.662-1.874-2.564-2.9-.9-1.027-1.755-2.142-2.185-3.455-.43-1.312-.455-2.825.127-4.618a.42.42 0 0 0 .008-.285c-.15-.514-.525-1.102-.84-1.564C9.78.37 9.44.088 9.104.035A.67.67 0 0 0 8.95.02C8.58.02 8.31.243 8.13.49c-.363.49-.48 1.09-.433 1.67.099 1.173.78 2.14 1.617 2.946.838.806 1.835 1.432 2.627 2.04.792.608 1.36 1.19 1.527 1.736.168.546-.02 1.14-.49 1.76-.47.62-1.23 1.274-1.97 2.018C10.67 13.404 9.76 14.42 9.24 15.62c-.52 1.197-.55 2.587.226 4.16.776 1.573 2.48 3.21 5.11 4.36l.26.112.285-.037c1.072-.14 2.03-.56 2.79-1.204.76-.644 1.32-1.51 1.576-2.525.255-1.014.21-2.13-.107-3.21-.318-1.078-.9-2.078-1.614-2.887-.365-.41-.75-.77-1.116-1.102-.365-.33-.71-.636-.97-.944-.26-.308-.41-.624-.375-.97.035-.346.207-.718.49-1.103.565-.77 1.5-1.596 2.186-2.41.686-.814 1.09-1.67.94-2.547-.155-.877-.845-1.615-1.804-2.09-.96-.476-2.193-.69-3.27-.6l-.01.001zM12 2.88c.195-.002.39.01.583.034.193.024.383.06.568.11.185.05.363.113.534.186.17.073.332.16.484.258.151.099.29.208.416.326.126.118.238.245.335.38.097.134.18.276.245.424.065.148.112.303.143.462.03.16.042.322.036.485-.006.163-.03.326-.07.488-.04.161-.097.32-.168.473-.071.154-.157.3-.256.437-.098.137-.21.264-.333.38-.122.115-.255.22-.396.31-.14.09-.29.164-.446.225-.155.06-.317.106-.483.136-.165.03-.335.043-.505.038-.17-.005-.339-.029-.504-.07-.165-.041-.325-.1-.478-.175-.153-.076-.298-.168-.433-.276-.134-.108-.258-.23-.369-.365-.11-.135-.207-.282-.288-.438-.081-.157-.146-.32-.195-.49-.049-.169-.08-.344-.093-.52-.013-.175-.008-.35.014-.524.021-.174.062-.346.12-.512.058-.166.133-.326.224-.477.09-.15.196-.291.316-.42.119-.128.252-.244.395-.344.144-.1.299-.186.46-.254.163-.069.33-.12.5-.153.17-.033.343-.05.515-.048z',
+    color: '#FCC624',
+    category: 'Systems',
+    level: 88,
+  },
+  {
+    name: 'Odoo',
+    svgPath: 'M8.024 11.976A3.952 3.952 0 0 0 4.07 15.93a3.952 3.952 0 0 0 3.953 3.953 3.952 3.952 0 0 0 3.952-3.953 3.952 3.952 0 0 0-3.952-3.953zM12 4.07a3.952 3.952 0 0 0-3.952 3.953 3.952 3.952 0 0 0 3.952 3.952 3.952 3.952 0 0 0 3.953-3.952A3.952 3.952 0 0 0 12 4.07zm7.93 7.906a3.952 3.952 0 0 0-3.954 3.953 3.952 3.952 0 0 0 3.953 3.953 3.952 3.952 0 0 0 3.953-3.953 3.952 3.952 0 0 0-3.953-3.953z',
+    color: '#714B67',
+    category: 'Systems',
+    level: 85,
+  },
+  {
+    name: 'AI Testing',
+    svgPath: 'M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z',
+    color: '#412991',
+    category: 'Emerging',
+    level: 82,
+  },
 ];
 
 const categories = ['All', 'Languages', 'Testing', 'DevOps', 'Systems', 'Emerging'];
+
+// Dynamically compute stats from skill data
+function computeStats() {
+  const testing = skills.filter(s => s.category === 'Testing').length;
+  const languages = skills.filter(s => s.category === 'Languages').length;
+  const devops = skills.filter(s => s.category === 'DevOps').length;
+  const systems = skills.filter(s => s.category === 'Systems').length + skills.filter(s => s.category === 'Emerging').length;
+  return [
+    { label: 'Test Frameworks', value: `${testing}+` },
+    { label: 'Languages', value: `${languages}+` },
+    { label: 'DevOps Tools', value: `${devops}+` },
+    { label: 'Other Tools', value: `${systems}+` },
+  ];
+}
+
+const stats = computeStats();
+
+interface SkillIconProps {
+  svgPath: string;
+  color: string;
+  size?: number;
+  isHovered: boolean;
+}
+
+function SkillIcon({ svgPath, color, size = 28, isHovered }: SkillIconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={isHovered ? color : 'currentColor'}
+      className={`transition-all duration-300 ${isHovered ? '' : 'text-slate-400'}`}
+      aria-hidden="true"
+    >
+      <path d={svgPath} />
+    </svg>
+  );
+}
 
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -55,8 +189,8 @@ export function Skills() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
 
-  const filteredSkills = activeCategory === 'All' 
-    ? skills 
+  const filteredSkills = activeCategory === 'All'
+    ? skills
     : skills.filter(s => s.category === activeCategory);
 
   useEffect(() => {
@@ -69,11 +203,11 @@ export function Skills() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         title,
-        { y: 50, opacity: 0 },
-        { 
-          y: 0, 
-          opacity: 1, 
-          duration: 0.8,
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: section,
@@ -82,17 +216,16 @@ export function Skills() {
         }
       );
 
-
       gsap.fromTo(
         grid.children,
-        { scale: 0.8, opacity: 0, y: 30 },
-        { 
-          scale: 1, 
-          opacity: 1, 
+        { scale: 0.85, opacity: 0, y: 25 },
+        {
+          scale: 1,
+          opacity: 1,
           y: 0,
-          stagger: 0.05, 
-          duration: 0.6,
-          ease: 'back.out(1.2)',
+          stagger: 0.04,
+          duration: 0.55,
+          ease: 'back.out(1.4)',
           scrollTrigger: {
             trigger: grid,
             start: 'top 85%',
@@ -105,16 +238,24 @@ export function Skills() {
   }, []);
 
   useEffect(() => {
+    // Kill any existing floating tweens before starting new ones
+    gsap.killTweensOf('.skill-card');
+
     const cards = document.querySelectorAll('.skill-card');
     cards.forEach((card, i) => {
       gsap.to(card, {
-        y: Math.sin(i * 0.5) * 10,
-        duration: 3 + i * 0.2,
+        y: Math.sin(i * 0.6) * 8,
+        duration: 2.5 + i * 0.15,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
+        delay: i * 0.08,
       });
     });
+
+    return () => {
+      gsap.killTweensOf('.skill-card');
+    };
   }, [filteredSkills]);
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -122,18 +263,18 @@ export function Skills() {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
-    const rotateX = -(y - centerY) / 8;
-    const rotateY = (x - centerX) / 8;
-    
+
+    const rotateX = -(y - centerY) / 10;
+    const rotateY = (x - centerX) / 10;
+
     gsap.to(card, {
-      rotateX: rotateX,
-      rotateY: rotateY,
-      transformPerspective: 500,
-      duration: 0.2,
+      rotateX,
+      rotateY,
+      transformPerspective: 600,
+      duration: 0.25,
       ease: 'power2.out',
       overwrite: 'auto'
     });
@@ -145,8 +286,8 @@ export function Skills() {
     gsap.to(card, {
       rotateX: 0,
       rotateY: 0,
-      duration: 0.4,
-      ease: 'power2.out',
+      duration: 0.5,
+      ease: 'power3.out',
       overwrite: 'auto'
     });
   };
@@ -155,10 +296,10 @@ export function Skills() {
     <section
       ref={sectionRef}
       id="skills"
-      className="relative min-h-screen py-24 md:py-32 z-30 flex flex-col justify-center"
+      className="relative min-h-screen py-20 md:py-28 z-30 flex flex-col justify-center"
     >
-      <div className="w-full max-w-7xl 2xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div ref={titleRef} className="text-center mb-16 md:mb-20">
+      <div className="w-full max-w-7xl 2xl:max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-8 mt-8">
+        <div ref={titleRef} className="text-center mb-12 md:mb-16">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />
             <span className="text-cyan-400 mono text-sm tracking-widest">EXPERTISE</span>
@@ -169,19 +310,19 @@ export function Skills() {
             Tech <span className="text-gradient">Arsenal</span>
           </h2>
 
-          <p className="text-slate-400 max-w-2xl mx-auto mb-8">
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8 px-2">
             A comprehensive toolkit of technologies and frameworks I use to build robust automation solutions.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-12">
+          <div className="flex flex-wrap justify-center gap-2 mb-10">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm transition-all ${
+                className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
                   activeCategory === cat
-                    ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white'
-                    : 'glass text-slate-400 hover:text-white'
+                    ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]'
+                    : 'glass text-slate-400 hover:text-white hover:bg-white/10'
                 }`}
                 data-cursor-hover
               >
@@ -193,10 +334,9 @@ export function Skills() {
 
         <div
           ref={gridRef}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-10"
+          className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5"
         >
-          {filteredSkills.map((skill, index) => {
-            const Icon = skill.icon;
+          {filteredSkills.map((skill) => {
             const isHovered = hoveredSkill === skill.name;
 
             return (
@@ -209,53 +349,52 @@ export function Skills() {
                 <div
                   onMouseMove={handleCardMouseMove}
                   onMouseLeave={handleCardMouseLeave}
-                  className={`relative p-4 glass rounded-2xl transition-all duration-300 ${
-                    isHovered ? 'scale-105 glow-primary z-10' : ''
+                  className={`relative p-3 sm:p-4 glass rounded-2xl transition-all duration-300 cursor-default ${
+                    isHovered ? 'scale-105 z-10' : ''
                   }`}
+                  style={isHovered ? { boxShadow: `0 0 24px ${skill.color}40, 0 0 48px ${skill.color}15` } : {}}
                 >
-                  <div className="flex justify-center mb-2">
-                    <Icon
-                      className={`transition-colors ${
-                        isHovered ? 'text-indigo-400' : 'text-slate-400'
-                      }`}
-                      size={24}
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <SkillIcon
+                      svgPath={skill.svgPath}
+                      color={skill.color}
+                      size={26}
+                      isHovered={isHovered}
                     />
                   </div>
 
-                  <p className="text-center text-xs text-white font-medium mb-2">
+                  <p className="text-center text-xs text-white font-medium mb-2 leading-tight">
                     {skill.name}
                   </p>
 
-                  <div className="h-1 bg-slate-700 rounded-full overflow-hidden">
+                  <div className="h-1 bg-slate-700/80 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full transition-all duration-500"
-                      style={{ width: `${skill.level}%` }}
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${skill.level}%`,
+                        background: isHovered
+                          ? `linear-gradient(90deg, ${skill.color}, ${skill.color}99)`
+                          : 'linear-gradient(90deg, #6366f1, #06b6d4)',
+                      }}
                     />
                   </div>
 
                   <div
-                    className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/20 to-cyan-500/20 transition-opacity duration-300 ${
-                      isHovered ? 'opacity-100' : 'opacity-0'
-                    }`}
+                    className="absolute inset-0 rounded-2xl transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      background: `linear-gradient(135deg, ${skill.color}15, ${skill.color}05)`,
+                      opacity: isHovered ? 1 : 0,
+                    }}
                   />
                 </div>
-
-                {index < filteredSkills.length - 1 && index % 6 !== 5 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-2 w-4 h-px bg-slate-700/50" />
-                )}
               </div>
             );
           })}
         </div>
 
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { label: 'Test Frameworks', value: '8+' },
-            { label: 'Languages', value: '4+' },
-            { label: 'CI/CD Tools', value: '6+' },
-            { label: 'Cloud Platforms', value: '3+' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
+        <div className="mt-14 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center glass rounded-2xl py-5 px-3">
               <div className="text-2xl md:text-3xl font-bold text-gradient mb-1">
                 {stat.value}
               </div>

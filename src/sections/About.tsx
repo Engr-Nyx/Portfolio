@@ -70,7 +70,7 @@ export function About() {
         {
           x: 0,
           opacity: 1,
-          duration: 0.8,
+          duration: 0.9,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: section,
@@ -85,7 +85,7 @@ export function About() {
         {
           x: 0,
           opacity: 1,
-          duration: 0.8,
+          duration: 0.9,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: section,
@@ -101,8 +101,8 @@ export function About() {
           y: 0,
           opacity: 1,
           stagger: 0.1,
-          duration: 0.6,
-          ease: 'power2.out',
+          duration: 0.65,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: stats,
             start: 'top 85%',
@@ -120,14 +120,19 @@ export function About() {
       id="about"
       className="relative min-h-screen flex items-center z-20"
     >
-      <div className="w-full max-w-7xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <div ref={imageRef} className="relative max-w-[300px] sm:max-w-[380px] lg:max-w-[480px] mx-auto">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500 animate-spin-slow p-1">
+      <div className="w-full max-w-7xl 2xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-20 md:py-28">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+
+          {/* Profile Image */}
+          <div
+            ref={imageRef}
+            className="relative w-[220px] sm:w-[300px] md:w-[360px] lg:w-[440px] mx-auto flex-shrink-0"
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500 animate-spin-slow p-[3px]">
               <div className="w-full h-full rounded-full bg-[#020617]" />
             </div>
 
-            <div className="relative aspect-square rounded-full overflow-hidden m-1">
+            <div className="relative aspect-square rounded-full overflow-hidden m-[3px]">
               <img
                 src={`${import.meta.env.BASE_URL}profile.jpg`}
                 alt="Ramon Tomaquin"
@@ -136,21 +141,22 @@ export function About() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/50 to-transparent" />
             </div>
 
-            <div className="absolute -bottom-1 -right-4 glass-strong px-6 py-3 rounded-full">
+            <div className="absolute -bottom-2 -right-2 sm:-right-4 glass-strong px-4 sm:px-6 py-2.5 sm:py-3 rounded-full">
               <div className="flex items-center gap-2">
-                <Award className="text-indigo-400" size={20} />
-                <span className="text-white font-semibold">Rookie of the Year</span>
+                <Award className="text-indigo-400 flex-shrink-0" size={18} />
+                <span className="text-white font-semibold text-sm sm:text-base whitespace-nowrap">Rookie of the Year</span>
               </div>
             </div>
           </div>
 
+          {/* Content */}
           <div ref={contentRef}>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-px bg-gradient-to-r from-indigo-500 to-cyan-500" />
               <span className="text-cyan-400 mono text-sm tracking-widest">ABOUT ME</span>
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-6">
               Behind the{' '}
               <span className="text-gradient">Code</span>
             </h2>
@@ -164,36 +170,36 @@ export function About() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-4 mb-8">
+            <div className="flex flex-col xs:flex-row flex-wrap gap-3 mb-8">
               <div className="flex items-center gap-2 text-slate-400">
-                <MapPin size={16} className="text-indigo-400" />
+                <MapPin size={16} className="text-indigo-400 flex-shrink-0" />
                 <span className="text-sm">Taguig, Metro Manila</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
-                <Phone size={16} className="text-indigo-400" />
+                <Phone size={16} className="text-indigo-400 flex-shrink-0" />
                 <span className="text-sm">09925937460</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
-                <Mail size={16} className="text-indigo-400" />
-                <span className="text-sm">arcee.tomaquin@gmail.com</span>
+                <Mail size={16} className="text-indigo-400 flex-shrink-0" />
+                <span className="text-sm break-all">arcee.tomaquin@gmail.com</span>
               </div>
             </div>
 
-            <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="glass p-4 rounded-2xl text-center">
-                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
+            <div ref={statsRef} className="grid grid-cols-3 gap-3 sm:gap-6">
+              <div className="glass p-3 sm:p-4 rounded-2xl text-center">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={4} suffix="+" />
                 </div>
                 <div className="text-xs text-slate-500 mono">YEARS EXP</div>
               </div>
-              <div className="glass p-4 rounded-2xl text-center">
-                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
+              <div className="glass p-3 sm:p-4 rounded-2xl text-center">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={10} suffix="+" />
                 </div>
                 <div className="text-xs text-slate-500 mono">PROJECTS</div>
               </div>
-              <div className="glass p-4 rounded-2xl text-center">
-                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
+              <div className="glass p-3 sm:p-4 rounded-2xl text-center">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={100} suffix="%" />
                 </div>
                 <div className="text-xs text-slate-500 mono">AUTOMATION</div>

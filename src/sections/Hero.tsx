@@ -24,45 +24,46 @@ export function Hero() {
     if (!section || !title || !subtitle || !cta || !socials || !scrollIndicator) return;
 
     const ctx = gsap.context(() => {
-      const chars = title.querySelectorAll('.char');
+      // Select word spans (not char spans)
+      const words = title.querySelectorAll('.word');
 
       const tl = gsap.timeline({ delay: 1.5 });
 
       tl.fromTo(
-        chars,
+        words,
         {
           opacity: 0,
-          y: 50,
-          rotateX: -90,
+          y: 45,
+          rotateX: -80,
         },
         {
           opacity: 1,
           y: 0,
           rotateX: 0,
-          duration: 0.8,
-          stagger: 0.03,
-          ease: 'back.out(1.7)',
+          duration: 0.75,
+          stagger: 0.07,
+          ease: 'back.out(1.5)',
         }
       );
 
       tl.fromTo(
         subtitle,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
-        '-=0.3'
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' },
+        '-=0.35'
       );
 
       tl.fromTo(
         cta,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
-        '-=0.3'
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' },
+        '-=0.35'
       );
 
       tl.fromTo(
         socials.children,
-        { opacity: 0, x: -20 },
-        { opacity: 1, x: 0, duration: 0.4, stagger: 0.1, ease: 'power2.out' },
+        { opacity: 0, x: -18 },
+        { opacity: 1, x: 0, duration: 0.45, stagger: 0.1, ease: 'power3.out' },
         '-=0.3'
       );
 
@@ -78,14 +79,20 @@ export function Hero() {
     return () => ctx.revert();
   }, []);
 
-  const splitText = (text: string) => {
-    return text.split('').map((char, i) => (
-      <span
-        key={i}
-        className="char inline-block"
-        style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
-      >
-        {char === ' ' ? '\u00A0' : char}
+  /**
+   * Splits text into word-level spans so the entire word animates as one unit.
+   * Spaces between words are preserved as literal space characters.
+   */
+  const splitWords = (text: string) => {
+    return text.split(' ').map((word, i, arr) => (
+      <span key={i} className="word-wrapper inline-block overflow-hidden">
+        <span
+          className="word inline-block"
+          style={{ willChange: 'transform, opacity' }}
+        >
+          {word}
+        </span>
+        {i < arr.length - 1 && <span className="inline-block">&nbsp;</span>}
       </span>
     ));
   };
@@ -103,6 +110,7 @@ export function Hero() {
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden z-10"
     >
+      {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-indigo-500/10 blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl animate-float-delayed" />
@@ -119,38 +127,45 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative z-10 text-center px-4 pb-20">
+      <div className="relative z-10 text-center px-4 sm:px-6 pb-20 w-full max-w-5xl mx-auto">
         <h1
           ref={titleRef}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-7xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-4"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-5 leading-tight"
+          style={{ perspective: '800px' }}
         >
-          <div className="mb-2 md:mb-0">
-            <span className="block md:inline-block md:mr-4">{splitText('TEST')}</span>
-            <span className="block md:inline-block">{splitText('AUTOMATION ENGINEER')}</span>
+          {/* Line 1: TEST AUTOMATION ENGINEER */}
+          <div className="flex flex-wrap justify-center gap-x-[0.35em] gap-y-1 mb-1 sm:mb-0">
+            {splitWords('TEST AUTOMATION ENGINEER')}
           </div>
-          <span className="block my-2 md:my-0">{splitText('AND')}</span>
-          <span className="block mb-2 md:mb-0">{splitText('SOFTWARE DEVELOPMENT ENGINEER IN TEST')}</span>
+          {/* Line 2: AND */}
+          <div className="flex flex-wrap justify-center gap-x-[0.35em] gap-y-1 my-1 sm:my-0">
+            {splitWords('AND')}
+          </div>
+          {/* Line 3: SOFTWARE DEVELOPMENT ENGINEER IN TEST */}
+          <div className="flex flex-wrap justify-center gap-x-[0.35em] gap-y-1">
+            {splitWords('SOFTWARE DEVELOPMENT ENGINEER IN TEST')}
+          </div>
         </h1>
 
         <p
           ref={subtitleRef}
-          className="text-lg md:text-xl text-slate-400 mono tracking-widest mb-8"
+          className="text-base sm:text-lg md:text-xl text-slate-400 mono tracking-widest mb-8"
         >
           Ramon Christus Tomaquin
         </p>
 
-        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <a
             href="#projects"
             onClick={(e) => {
               e.preventDefault();
               document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="group relative px-8 py-4 bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold rounded-full overflow-hidden transition-transform hover:scale-105"
+            className="group relative px-7 py-3.5 sm:px-8 sm:py-4 bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto text-center"
             data-cursor-hover
           >
             <span className="relative z-10">Explore My Work</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </a>
           <a
             href="#contact"
@@ -158,7 +173,7 @@ export function Hero() {
               e.preventDefault();
               document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-8 py-4 border border-slate-600 text-slate-300 font-semibold rounded-full hover:border-indigo-500 hover:text-white transition-colors"
+            className="px-7 py-3.5 sm:px-8 sm:py-4 border border-slate-600 text-slate-300 font-semibold rounded-full hover:border-indigo-500 hover:text-white transition-all duration-300 w-full sm:w-auto text-center"
             data-cursor-hover
           >
             Get In Touch
@@ -170,8 +185,9 @@ export function Hero() {
             href="https://github.com/Engr-Nyx"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
             data-cursor-hover
+            aria-label="GitHub"
           >
             <Github size={20} />
           </a>
@@ -179,24 +195,27 @@ export function Hero() {
             href="https://www.linkedin.com/in/arcee-tomaquin-bb0b7a1b4/"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
             data-cursor-hover
+            aria-label="LinkedIn"
           >
             <Linkedin size={20} />
           </a>
           <a
             href="mailto:arcee.tomaquin@gmail.com"
-            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
             data-cursor-hover
+            aria-label="Email"
           >
             <Mail size={20} />
           </a>
         </div>
       </div>
 
+      {/* Scroll indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
         onClick={handleScrollDown}
         data-cursor-hover
       >
@@ -204,7 +223,8 @@ export function Hero() {
         <ChevronDown className="text-slate-500 animate-bounce" size={20} />
       </div>
 
-      <div className="absolute left-8 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4">
+      {/* Side label */}
+      <div className="absolute left-6 lg:left-8 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4">
         <div className="w-px h-20 bg-gradient-to-b from-transparent via-slate-600 to-transparent" />
         <span className="text-xs text-slate-600 mono tracking-widest" style={{ writingMode: 'vertical-lr' }}>
           BASED IN TAGUIG, PH
