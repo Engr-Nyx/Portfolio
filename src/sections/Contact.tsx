@@ -87,14 +87,14 @@ export function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative min-h-screen flex items-center z-50"
+      className="relative py-24 md:py-32 z-50"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-indigo-500/10 blur-3xl animate-pulse-glow" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl animate-pulse-glow" style={{ animationDelay: '1s' }} />
       </div>
 
-      <div ref={contentRef} className="w-full max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+      <div ref={contentRef} className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />

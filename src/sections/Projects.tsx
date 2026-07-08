@@ -135,9 +135,9 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative min-h-screen py-24 md:py-32 z-40"
+      className="relative py-24 md:py-32 z-40"
     >
-      <div className="w-full max-w-6xl 2xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={titleRef} className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 h-px bg-gradient-to-r from-transparent to-indigo-500" />

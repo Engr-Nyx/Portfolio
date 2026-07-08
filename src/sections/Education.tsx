@@ -65,7 +65,7 @@ export function Education() {
       id="education"
       className="relative py-24 md:py-32 z-20"
     >
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={contentRef}>
           <div className="text-center mb-16 md:mb-20">
             <div className="flex items-center justify-center gap-4 mb-6">

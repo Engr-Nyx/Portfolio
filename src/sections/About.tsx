@@ -66,30 +66,31 @@ export function About() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         image,
-        { x: -50, opacity: 0 },
+        { y: 50, opacity: 0, scale: 0.95 },
         {
-          x: 0,
+          y: 0,
           opacity: 1,
-          duration: 0.9,
+          scale: 1,
+          duration: 1,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: section,
-            start: 'top 70%',
+            start: 'top 75%',
           }
         }
       );
 
       gsap.fromTo(
         content,
-        { x: 50, opacity: 0 },
+        { y: 50, opacity: 0 },
         {
-          x: 0,
+          y: 0,
           opacity: 1,
-          duration: 0.9,
+          duration: 1,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: section,
-            start: 'top 70%',
+            start: 'top 75%',
           }
         }
       );
@@ -118,15 +119,15 @@ export function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative min-h-screen flex items-center z-20"
+      className="relative py-24 md:py-32 flex items-center z-20"
     >
-      <div className="w-full max-w-7xl 2xl:max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-20 md:py-28">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
 
           {/* Profile Image */}
           <div
             ref={imageRef}
-            className="relative w-[220px] sm:w-[300px] md:w-[360px] lg:w-[440px] mx-auto flex-shrink-0"
+            className="relative w-[300px] md:w-[360px] lg:w-[440px] mx-auto flex-shrink-0"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500 animate-spin-slow p-[3px]">
               <div className="w-full h-full rounded-full bg-[#020617]" />
@@ -156,7 +157,7 @@ export function About() {
               <span className="text-cyan-400 mono text-sm tracking-widest">ABOUT ME</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-6">
               Behind the{' '}
               <span className="text-gradient">Code</span>
             </h2>
@@ -187,19 +188,19 @@ export function About() {
 
             <div ref={statsRef} className="grid grid-cols-3 gap-3 sm:gap-6">
               <div className="glass p-3 sm:p-4 rounded-2xl text-center">
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-1">
+                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={4} suffix="+" />
                 </div>
                 <div className="text-xs text-slate-500 mono">YEARS EXP</div>
               </div>
               <div className="glass p-3 sm:p-4 rounded-2xl text-center">
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-1">
+                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={10} suffix="+" />
                 </div>
                 <div className="text-xs text-slate-500 mono">PROJECTS</div>
               </div>
               <div className="glass p-3 sm:p-4 rounded-2xl text-center">
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-1">
+                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={100} suffix="%" />
                 </div>
                 <div className="text-xs text-slate-500 mono">AUTOMATION</div>

@@ -27,7 +27,7 @@ export function Hero() {
       // Select word spans (not char spans)
       const words = title.querySelectorAll('.word');
 
-      const tl = gsap.timeline({ delay: 1.5 });
+      const tl = gsap.timeline({ delay: 0.5 });
 
       tl.fromTo(
         words,
@@ -92,7 +92,6 @@ export function Hero() {
         >
           {word}
         </span>
-        {i < arr.length - 1 && <span className="inline-block">&nbsp;</span>}
       </span>
     ));
   };
@@ -127,29 +126,29 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative z-10 text-center px-4 sm:px-6 pb-20 w-full max-w-5xl mx-auto">
+      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 pb-20 w-full max-w-7xl mx-auto">
         <h1
           ref={titleRef}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-5 leading-tight"
+          className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-6 leading-tight"
           style={{ perspective: '800px' }}
         >
           {/* Line 1: TEST AUTOMATION ENGINEER */}
-          <div className="flex flex-wrap justify-center gap-x-[0.35em] gap-y-1 mb-1 sm:mb-0">
+          <div className="flex flex-wrap justify-center gap-x-[0.3em] gap-y-2 mb-4">
             {splitWords('TEST AUTOMATION ENGINEER')}
           </div>
-          {/* Line 2: AND */}
-          <div className="flex flex-wrap justify-center gap-x-[0.35em] gap-y-1 my-1 sm:my-0">
-            {splitWords('AND')}
+          {/* Line 2: & */}
+          <div className="flex flex-wrap justify-center gap-x-[0.3em] gap-y-2 my-4 text-indigo-400 text-4xl md:text-5xl lg:text-6xl">
+            {splitWords('&')}
           </div>
           {/* Line 3: SOFTWARE DEVELOPMENT ENGINEER IN TEST */}
-          <div className="flex flex-wrap justify-center gap-x-[0.35em] gap-y-1">
+          <div className="flex flex-wrap justify-center gap-x-[0.3em] gap-y-2">
             {splitWords('SOFTWARE DEVELOPMENT ENGINEER IN TEST')}
           </div>
         </h1>
 
         <p
           ref={subtitleRef}
-          className="text-base sm:text-lg md:text-xl text-slate-400 mono tracking-widest mb-8"
+          className="text-lg md:text-xl text-slate-400 mono tracking-widest mb-8"
         >
           Ramon Christus Tomaquin
         </p>
@@ -161,7 +160,7 @@ export function Hero() {
               e.preventDefault();
               document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="group relative px-7 py-3.5 sm:px-8 sm:py-4 bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto text-center"
+            className="group relative px-8 py-4 bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto text-center"
             data-cursor-hover
           >
             <span className="relative z-10">Explore My Work</span>
@@ -173,7 +172,7 @@ export function Hero() {
               e.preventDefault();
               document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-7 py-3.5 sm:px-8 sm:py-4 border border-slate-600 text-slate-300 font-semibold rounded-full hover:border-indigo-500 hover:text-white transition-all duration-300 w-full sm:w-auto text-center"
+            className="px-8 py-4 border border-slate-600 text-slate-300 font-semibold rounded-full hover:border-indigo-500 hover:text-white transition-all duration-300 w-full sm:w-auto text-center"
             data-cursor-hover
           >
             Get In Touch
