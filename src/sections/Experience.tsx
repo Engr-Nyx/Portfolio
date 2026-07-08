@@ -152,7 +152,7 @@ export function Experience() {
       );
 
       const cards = timeline.querySelectorAll('.experience-card');
-      cards.forEach((card, i) => {
+      cards.forEach((card) => {
         gsap.fromTo(
           card,
           {

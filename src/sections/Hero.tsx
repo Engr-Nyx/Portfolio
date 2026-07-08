@@ -84,7 +84,7 @@ export function Hero() {
    * Spaces between words are preserved as literal space characters.
    */
   const splitWords = (text: string) => {
-    return text.split(' ').map((word, i, arr) => (
+    return text.split(' ').map((word, i) => (
       <span key={i} className="word-wrapper inline-block overflow-hidden">
         <span
           className="word inline-block"
