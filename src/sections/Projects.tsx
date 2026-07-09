@@ -33,16 +33,16 @@ const projects: Project[] = [
     },
   },
   {
-    title: 'Zero-Touch CI/CD Pipeline',
-    subtitle: 'Enterprise Deployment Validation',
+    title: 'Playwright & LambdaTest',
+    subtitle: 'Cloud Automation Framework',
     description:
-      'A comprehensive CI/CD pipeline system that automates the entire deployment validation process. Integrates with multiple testing frameworks including Selenium, Appium, and API testing tools. Features real-time monitoring, automatic rollback on failure, and detailed reporting dashboards.',
+      'A Playwright automation framework integrated with LambdaTest, featuring full CI/CD pipelines using GitHub Actions and GitHub Pages.',
     image: `${import.meta.env.BASE_URL}project-2.jpg`,
-    tags: ['Docker', 'Kubernetes', 'Jenkins', 'Selenium', 'REST APIs'],
+    tags: ['Playwright', 'LambdaTest', 'GitHub Actions', 'CI/CD'],
     icon: Zap,
     links: {
-      demo: `${import.meta.env.BASE_URL}404`,
-      github: `${import.meta.env.BASE_URL}404`,
+      demo: 'https://engr-nyx.github.io/PlaywrightWithLamdaTest/',
+      github: 'https://github.com/Engr-Nyx/PlaywrightWithLamdaTest',
     },
   },
   {
