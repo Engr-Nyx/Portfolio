@@ -126,7 +126,7 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 pb-20 w-full max-w-7xl mx-auto">
+      <div className="relative z-10 text-center px-8 sm:px-12 lg:px-16 pt-16 pb-28 mt-12 w-full max-w-[90rem] mx-auto">
         <h1
           ref={titleRef}
           className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-6 leading-tight"
