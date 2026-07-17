@@ -30,11 +30,11 @@ export function GradientBackground() {
 
     let width = window.innerWidth;
     let height = window.innerHeight;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     let nodes: Node[] = [];
 
     const buildNodes = () => {
-      const count = Math.max(18, Math.min(60, Math.round((width * height) / 22000)));
+      const count = Math.max(14, Math.min(40, Math.round((width * height) / 32000)));
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
@@ -47,7 +47,7 @@ export function GradientBackground() {
     const resize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -79,6 +79,8 @@ export function GradientBackground() {
 
     let time = 0;
     let gridOffset = 0;
+    let lastFrame = 0;
+    const frameInterval = 1000 / 30; // ambient background — 30fps is plenty and halves CPU cost
 
     const drawGrid = () => {
       gridOffset = reducedMotion ? 0 : (gridOffset + 0.12) % GRID_SIZE;
@@ -162,7 +164,15 @@ export function GradientBackground() {
       });
     };
 
-    const animate = () => {
+    const animate = (now: number) => {
+      animationRef.current = requestAnimationFrame(animate);
+
+      // Throttle to ~30fps: this is slow ambient motion, not something
+      // that benefits from 60fps, and skipping frames here is by far the
+      // cheapest way to cut the canvas's CPU cost in half.
+      if (now - lastFrame < frameInterval) return;
+      lastFrame = now;
+
       time += 1;
 
       ctx.fillStyle = '#020617';
@@ -189,21 +199,9 @@ export function GradientBackground() {
       });
 
       drawNetwork();
-
-      const imageData = ctx.getImageData(0, 0, width * dpr, height * dpr);
-      const data = imageData.data;
-      for (let i = 0; i < data.length; i += 4) {
-        const noise = (Math.random() - 0.5) * 3;
-        data[i] = Math.max(0, Math.min(255, data[i] + noise));
-        data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
-        data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
-      }
-      ctx.putImageData(imageData, 0, 0);
-
-      animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', resize);
@@ -220,6 +218,17 @@ export function GradientBackground() {
         ref={canvasRef}
         className="fixed inset-0 z-0 pointer-events-none"
         style={{ opacity: 1 }}
+      />
+      {/* Film grain — a static SVG noise texture composited by the GPU
+          instead of a per-pixel JS pass on every frame. Same look, none
+          of the cost. */}
+      <div
+        aria-hidden
+        className="fixed inset-0 z-0 pointer-events-none opacity-[0.035] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
       />
       {/* Cyberpunk scanline sweep — a thin light band drifting down the
           viewport, reinforced by a faint static scanline texture. */}
