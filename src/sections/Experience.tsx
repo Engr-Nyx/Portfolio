@@ -187,21 +187,22 @@ export function Experience() {
     return () => ctx.revert();
   }, []);
 
-  // Clicking a filter button reveals cards that may sit below the current
-  // scroll position. Their scroll-scrubbed entrance animation is driven by
-  // scroll position, not by whether they're currently shown — left alone,
-  // a newly-revealed card would stay stuck at its pre-scroll (faded,
-  // offset) state until the user scrolled down and back up to "trigger"
-  // it. Force every matched card fully visible the moment the filter
-  // changes, then refresh ScrollTrigger so its cached trigger positions
-  // account for the timeline's new (collapsed/expanded) height.
+  // Clicking a filter button changes the timeline's height (collapsed/
+  // expanded cards), which shifts where each remaining card's scroll
+  // trigger actually sits on the page. Refreshing ScrollTrigger recalculates
+  // those positions and re-evaluates every trigger against the current
+  // scroll position, so an already-passed card is immediately shown fully
+  // rather than waiting for the next scroll event.
+  //
+  // Note: don't force cards visible with gsap.set here — killing the
+  // scrub tweens that ScrollTrigger owns leaves their triggers orphaned
+  // and breaks scrolling for the rest of the section.
+  const isFirstRender = useRef(true);
   useEffect(() => {
-    const matchedCards = experiences
-      .map((exp, i) => (matchesSkill(exp, selectedSkill) ? cardRefs.current[i] : null))
-      .filter((el): el is HTMLDivElement => Boolean(el));
-
-    gsap.set(matchedCards, { y: 0, opacity: 1, overwrite: true });
-
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 550);
     return () => clearTimeout(refreshTimer);
   }, [selectedSkill]);
