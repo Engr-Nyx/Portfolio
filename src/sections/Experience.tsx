@@ -186,6 +186,30 @@ export function Experience() {
     return () => ctx.revert();
   }, []);
 
+  // Clicking a filter button reveals cards that may sit below the current
+  // scroll position. Their scroll-scrubbed entrance animation is driven by
+  // scroll position, not by whether they're currently shown — left alone,
+  // a newly-revealed card would stay stuck at its pre-scroll (faded,
+  // offset) state until the user scrolled down and back up to "trigger"
+  // it. Force every matched card fully visible the moment the filter
+  // changes, then refresh ScrollTrigger so its cached trigger positions
+  // account for the timeline's new (collapsed/expanded) height.
+  useEffect(() => {
+    const timeline = timelineRef.current;
+    if (!timeline) return;
+
+    const matchedCards = experiences
+      .map((exp, i) => (matchesSkill(exp, selectedSkill) ? i : null))
+      .filter((i): i is number => i !== null)
+      .map((i) => timeline.querySelectorAll('.experience-card')[i])
+      .filter((el): el is Element => Boolean(el));
+
+    gsap.set(matchedCards, { y: 0, opacity: 1 });
+
+    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 550);
+    return () => clearTimeout(refreshTimer);
+  }, [selectedSkill]);
+
   return (
     <section
       ref={sectionRef}
