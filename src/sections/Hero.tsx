@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
+import { useMagnetic } from '../hooks/use-magnetic';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +13,12 @@ export function Hero() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const blobARef = useRef<HTMLDivElement>(null);
+  const blobBRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const primaryCtaRef = useMagnetic<HTMLAnchorElement>(0.3);
+  const secondaryCtaRef = useMagnetic<HTMLAnchorElement>(0.3);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -79,6 +86,34 @@ export function Hero() {
     return () => ctx.revert();
   }, []);
 
+  // Scroll-scrubbed parallax exit: content drifts up + fades as you leave
+  // the hero, background layers move at different depths for a sense of
+  // 3D scroll. Runs both directions since it's driven by scroll position.
+  useEffect(() => {
+    const section = sectionRef.current;
+    const content = contentRef.current;
+    if (!section || !content) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const scrollCfg = {
+        trigger: section,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.6,
+      };
+
+      gsap.to(content, { y: -120, opacity: 0, ease: 'none', scrollTrigger: scrollCfg });
+      if (blobARef.current) gsap.to(blobARef.current, { y: -260, x: -40, ease: 'none', scrollTrigger: scrollCfg });
+      if (blobBRef.current) gsap.to(blobBRef.current, { y: -160, x: 60, ease: 'none', scrollTrigger: scrollCfg });
+      if (gridRef.current) gsap.to(gridRef.current, { y: -60, ease: 'none', scrollTrigger: scrollCfg });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   /**
    * Splits text into word-level spans so the entire word animates as one unit.
    * Spaces between words are preserved as literal space characters.
@@ -107,14 +142,15 @@ export function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden z-10"
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden z-10"
     >
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-indigo-500/10 blur-3xl animate-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl animate-float-delayed" />
+        <div ref={blobARef} className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-indigo-500/10 blur-3xl animate-float" />
+        <div ref={blobBRef} className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl animate-float-delayed" />
 
         <div
+          ref={gridRef}
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
@@ -126,10 +162,10 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative z-10 text-center px-8 sm:px-12 lg:px-16 pt-16 pb-28 mt-12 w-full max-w-[90rem] mx-auto">
+      <div ref={contentRef} className="relative z-10 text-center px-5 sm:px-12 lg:px-16 pt-14 sm:pt-16 pb-24 sm:pb-28 mt-8 sm:mt-12 w-full max-w-[90rem] mx-auto">
         <h1
           ref={titleRef}
-          className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white font-['Space_Grotesk'] tracking-tight mb-6 leading-tight"
+          className="font-bold text-white font-['Space_Grotesk'] tracking-tight mb-6 leading-tight text-[clamp(1.75rem,6.5vw,4.5rem)]"
           style={{ perspective: '800px' }}
         >
           {/* Line 1: TEST AUTOMATION ENGINEER */}
@@ -137,7 +173,7 @@ export function Hero() {
             {splitWords('TEST AUTOMATION ENGINEER')}
           </div>
           {/* Line 2: & */}
-          <div className="flex flex-wrap justify-center gap-x-[0.3em] gap-y-2 my-4 text-indigo-400 text-4xl md:text-5xl lg:text-6xl">
+          <div className="flex flex-wrap justify-center gap-x-[0.3em] gap-y-2 my-4 text-indigo-400 text-[clamp(1.5rem,5.5vw,3.75rem)]">
             {splitWords('&')}
           </div>
           {/* Line 3: SOFTWARE DEVELOPMENT ENGINEER IN TEST */}
@@ -148,13 +184,14 @@ export function Hero() {
 
         <p
           ref={subtitleRef}
-          className="text-lg md:text-xl text-slate-400 mono tracking-widest mb-8"
+          className="text-base sm:text-lg md:text-xl text-slate-400 mono tracking-widest mb-8"
         >
           Ramon Christus Tomaquin
         </p>
 
         <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <a
+            ref={primaryCtaRef}
             href="#projects"
             onClick={(e) => {
               e.preventDefault();
@@ -167,12 +204,13 @@ export function Hero() {
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </a>
           <a
+            ref={secondaryCtaRef}
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
               document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-8 py-4 border border-slate-600 text-slate-300 font-semibold rounded-full hover:border-indigo-500 hover:text-white transition-all duration-300 w-full sm:w-auto text-center"
+            className="px-8 py-4 border border-slate-600 text-slate-300 font-semibold rounded-full hover:border-indigo-500 hover:text-white hover:scale-105 active:scale-95 transition-all duration-300 w-full sm:w-auto text-center"
             data-cursor-hover
           >
             Get In Touch
@@ -184,7 +222,7 @@ export function Hero() {
             href="https://github.com/Engr-Nyx"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
+            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all duration-300"
             data-cursor-hover
             aria-label="GitHub"
           >
@@ -194,7 +232,7 @@ export function Hero() {
             href="https://www.linkedin.com/in/arcee-tomaquin-bb0b7a1b4/"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
+            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all duration-300"
             data-cursor-hover
             aria-label="LinkedIn"
           >
@@ -202,7 +240,7 @@ export function Hero() {
           </a>
           <a
             href="mailto:arcee.tomaquin@gmail.com"
-            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
+            className="p-3 glass rounded-full text-slate-400 hover:text-white hover:bg-white/10 hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all duration-300"
             data-cursor-hover
             aria-label="Email"
           >
@@ -214,7 +252,7 @@ export function Hero() {
       {/* Scroll indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+        className="absolute bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
         onClick={handleScrollDown}
         data-cursor-hover
       >

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ExternalLink, Github, Sparkles, Zap, Shield } from 'lucide-react';
+import { useHeadingReveal } from '../hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,6 +65,8 @@ export function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingReveal(headingRef);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -90,20 +93,26 @@ export function Projects() {
 
       const cards = cardsContainer.querySelectorAll('.project-card');
 
+      // Cards swing up into place, alternating tilt direction so they read
+      // as being "dealt" onto the grid rather than rising in lockstep.
       cards.forEach((card, i) => {
         gsap.fromTo(
           card,
           {
             y: 100,
             opacity: 0,
-            rotateX: 15,
+            rotateX: 20,
+            rotateY: i % 2 === 0 ? -18 : 18,
+            scale: 0.85,
           },
           {
             y: 0,
             opacity: 1,
             rotateX: 0,
-            duration: 0.8,
-            delay: i * 0.2,
+            rotateY: 0,
+            scale: 1,
+            duration: 0.9,
+            delay: i * 0.15,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: cardsContainer,
@@ -131,6 +140,36 @@ export function Projects() {
     return () => ctx.revert();
   }, []);
 
+  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateX = -(y - rect.height / 2) / 18;
+    const rotateY = (x - rect.width / 2) / 18;
+
+    gsap.to(card, {
+      rotateX,
+      rotateY,
+      scale: 1.02,
+      duration: 0.3,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+  };
+
+  const handleTiltLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    gsap.to(e.currentTarget, {
+      rotateX: 0,
+      rotateY: 0,
+      scale: 1,
+      duration: 0.5,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    });
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -145,7 +184,7 @@ export function Projects() {
             <div className="w-12 h-px bg-gradient-to-l from-transparent to-cyan-500" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
+          <h2 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
             Featured <span className="text-gradient">Work</span>
           </h2>
 
@@ -156,7 +195,7 @@ export function Projects() {
 
         <div
           ref={cardsContainerRef}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {projects.map((project) => {
             const Icon = project.icon;
@@ -166,6 +205,8 @@ export function Projects() {
                 key={project.title}
                 className="project-card group relative h-full flex flex-col"
                 style={{ perspective: '1000px' }}
+                onMouseMove={handleTiltMove}
+                onMouseLeave={handleTiltLeave}
                 data-cursor-hover
               >
                 <div className="relative glass rounded-2xl overflow-hidden transition-all duration-500 hover:glow-primary flex flex-col h-full">
@@ -199,7 +240,7 @@ export function Projects() {
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-2 py-1 text-xs bg-slate-800 text-slate-400 rounded"
+                          className="px-2 py-1 text-xs bg-slate-800 text-slate-400 rounded hover:bg-indigo-500/20 hover:text-indigo-300 hover:scale-105 transition-all duration-200"
                         >
                           {tag}
                         </span>

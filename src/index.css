@@ -88,6 +88,33 @@
   .glass-strong {
     @apply backdrop-blur-2xl bg-white/10 border border-white/20;
   }
+
+  /* Cursor-tracked spotlight — pair with a mousemove handler that sets
+     --spot-x / --spot-y (percentages) on the element. */
+  .spotlight-card {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .spotlight-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background: radial-gradient(
+      280px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgba(99, 102, 241, 0.16),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
   
   .glow-primary {
     box-shadow: 0 0 40px rgba(99, 102, 241, 0.3), 0 0 80px rgba(99, 102, 241, 0.1);
@@ -125,12 +152,6 @@
     will-change: transform, opacity;
   }
 
-  /* xs breakpoint helper (below 475px) */
-  @media (min-width: 475px) {
-    .xs\:flex-row { flex-direction: row; }
-    .xs\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .xs\:w-auto { width: auto; }
-  }
 }
 
 @keyframes float {
@@ -176,6 +197,48 @@
 
 .animate-spin-slow {
   animation: spin-slow 22s linear infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+/* One-time shine sweep on the recruiter CTA to draw the eye ~2s after load */
+@keyframes shine-sweep {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+.recruiter-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.recruiter-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: shine-sweep 1.4s ease-in-out 1.8s 1;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recruiter-cta::before {
+    animation: none;
+  }
 }
 
 /* Custom scrollbar */
@@ -243,4 +306,20 @@ section {
 button, a {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+}
+
+/* Respect OS-level motion preference: freeze decorative CSS animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-pulse-glow,
+  .animate-gradient-shift,
+  .animate-spin-slow,
+  .animate-bounce,
+  .animate-ping {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
 }

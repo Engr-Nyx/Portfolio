@@ -16,9 +16,11 @@ const navItems = [
 
 export function Navigation() {
   const [isVisible, setIsVisible] = useState(false);
+  const [mobileBarShown, setMobileBarShown] = useState(true);
   const [activeSection, setActiveSection] = useState('hero');
   const navRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     ScrollTrigger.create({
@@ -48,6 +50,30 @@ export function Navigation() {
     };
   }, []);
 
+  // Auto-hide the mobile bar on scroll-down, reveal it on scroll-up —
+  // gives the small viewport back to content while keeping nav one
+  // swipe away. Ignores tiny jitters so it doesn't flicker.
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    const handleScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastScrollY.current;
+
+      if (Math.abs(delta) < 8) return;
+
+      if (delta > 0 && y > 120) {
+        setMobileBarShown(false);
+      } else {
+        setMobileBarShown(true);
+      }
+      lastScrollY.current = y;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -71,6 +97,8 @@ export function Navigation() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+
+    if (navigator.vibrate) navigator.vibrate(8);
 
     if (href === '#hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -122,9 +150,9 @@ export function Navigation() {
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation — with iOS safe-area inset */}
+      {/* Mobile Bottom Navigation — with iOS safe-area inset, auto-hides on scroll-down */}
       <div
-        className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-all duration-500 ${isVisible
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isVisible && mobileBarShown
             ? 'opacity-100 translate-y-0'
             : 'opacity-0 translate-y-full pointer-events-none'
           }`}
@@ -139,7 +167,7 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                className="relative flex flex-col items-center justify-center flex-1 h-full group z-10"
+                className="relative flex flex-col items-center justify-center flex-1 h-full group z-10 active:scale-90 transition-transform duration-150"
                 data-cursor-hover
                 aria-label={item.label}
               >
@@ -156,7 +184,7 @@ export function Navigation() {
                 {/* Floating icon bubble */}
                 <div
                   className={`absolute transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.26,1.55)] flex items-center justify-center ${isActive
-                      ? '-top-4 w-10 h-10 bg-gradient-to-tr from-cyan-500 to-indigo-500 rounded-full shadow-[0_6px_16px_rgba(6,182,212,0.4)]'
+                      ? '-top-4 w-10 h-10 bg-gradient-to-tr from-cyan-500 to-indigo-500 rounded-full shadow-[0_6px_16px_rgba(6,182,212,0.4)] animate-pulse-glow'
                       : 'top-[8px] w-7 h-7 bg-transparent rounded-full'
                     }`}
                 >

@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { GraduationCap, BookOpen, Award, Users, Star } from 'lucide-react';
+import { handleSpotlight } from '@/lib/spotlight';
+import { useHeadingReveal } from '@/hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,6 +33,11 @@ const achievements = [
 export function Education() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const degreeCardRef = useRef<HTMLDivElement>(null);
+  const achievementsRef = useRef<HTMLDivElement>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingReveal(headingRef);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -39,21 +46,54 @@ export function Education() {
     if (!section || !content) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        content.children,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.1,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: content,
-            start: 'top 80%',
-          },
-        }
-      );
+      // Degree card unfolds with a slight 3D tilt, like a diploma being laid flat.
+      if (degreeCardRef.current) {
+        gsap.fromTo(
+          degreeCardRef.current,
+          { opacity: 0, rotateX: -25, y: 40, transformPerspective: 800 },
+          {
+            opacity: 1,
+            rotateX: 0,
+            y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: content, start: 'top 80%' },
+          }
+        );
+      }
+
+      // Achievement cards pop in one by one with an elastic bounce.
+      if (achievementsRef.current) {
+        gsap.fromTo(
+          achievementsRef.current.children,
+          { y: 40, opacity: 0, scale: 0.5, rotate: -6 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotate: 0,
+            stagger: 0.1,
+            duration: 0.7,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: achievementsRef.current, start: 'top 88%' },
+          }
+        );
+      }
+
+      if (bannerRef.current) {
+        gsap.fromTo(
+          bannerRef.current,
+          { opacity: 0, scale: 0.7, y: 20 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'back.out(2.4)',
+            scrollTrigger: { trigger: bannerRef.current, start: 'top 92%' },
+          }
+        );
+      }
     }, section);
 
     return () => ctx.revert();
@@ -74,12 +114,12 @@ export function Education() {
               <div className="w-12 h-px bg-gradient-to-l from-transparent to-cyan-500" />
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
+            <h2 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
               Education <span className="text-gradient">& Awards</span>
             </h2>
           </div>
 
-          <div className="glass p-8 rounded-3xl mb-12 max-w-3xl mx-auto">
+          <div ref={degreeCardRef} className="glass p-8 rounded-3xl mb-12 max-w-3xl mx-auto">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="p-6 bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 rounded-2xl">
                 <GraduationCap className="text-indigo-400" size={48} />
@@ -107,17 +147,18 @@ export function Education() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div ref={achievementsRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {achievements.map((achievement) => {
               const Icon = achievement.icon;
               return (
                 <div
                   key={achievement.title}
-                  className="glass p-6 rounded-2xl text-center hover:glow-primary transition-all duration-300 group"
+                  onMouseMove={handleSpotlight}
+                  className="spotlight-card glass p-6 rounded-2xl text-center hover:glow-primary hover:-translate-y-1 transition-all duration-300 group"
                   data-cursor-hover
                 >
                   <div className="flex justify-center mb-4">
-                    <div className="p-3 bg-indigo-500/20 rounded-xl group-hover:bg-indigo-500/30 transition-colors">
+                    <div className="p-3 bg-indigo-500/20 rounded-xl group-hover:bg-indigo-500/30 group-hover:scale-110 transition-all duration-300">
                       <Icon className="text-indigo-400" size={24} />
                     </div>
                   </div>
@@ -128,7 +169,7 @@ export function Education() {
             })}
           </div>
 
-          <div className="mt-12 text-center">
+          <div ref={bannerRef} className="mt-12 text-center">
             <div className="inline-flex items-center gap-4 glass-strong px-8 py-4 rounded-full">
               <Award className="text-yellow-400" size={32} />
               <div className="text-left">

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MapPin, Phone, Mail, Award } from 'lucide-react';
+import { useHeadingReveal } from '../hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,6 +55,8 @@ export function About() {
   const imageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingReveal(headingRef);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -64,49 +67,56 @@ export function About() {
     if (!section || !image || !content || !stats) return;
 
     const ctx = gsap.context(() => {
+      // Portrait: spins open with a scale pop, like an aperture.
       gsap.fromTo(
         image,
-        { y: 50, opacity: 0, scale: 0.95 },
+        { opacity: 0, rotate: -14, scale: 0.7 },
+        {
+          opacity: 1,
+          rotate: 0,
+          scale: 1,
+          duration: 1.1,
+          ease: 'back.out(1.4)',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 75%',
+          }
+        }
+      );
+
+      // Content: paragraphs and contact rows cascade in from the right,
+      // distinct from the image's clip-open on the left.
+      const contentBlocks = content.querySelectorAll(':scope > *:not(h2)');
+      gsap.fromTo(
+        contentBlocks,
+        { x: 60, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.12,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 75%',
+          }
+        }
+      );
+
+      // Stats: elastic pop, one after another.
+      gsap.fromTo(
+        stats.children,
+        { y: 30, opacity: 0, scale: 0.6 },
         {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 75%',
-          }
-        }
-      );
-
-      gsap.fromTo(
-        content,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 75%',
-          }
-        }
-      );
-
-      gsap.fromTo(
-        stats.children,
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.1,
-          duration: 0.65,
-          ease: 'power3.out',
+          stagger: 0.12,
+          duration: 0.7,
+          ease: 'back.out(2.2)',
           scrollTrigger: {
             trigger: stats,
-            start: 'top 85%',
+            start: 'top 88%',
           }
         }
       );
@@ -127,7 +137,7 @@ export function About() {
           {/* Profile Image */}
           <div
             ref={imageRef}
-            className="relative w-[300px] md:w-[360px] lg:w-[440px] mx-auto flex-shrink-0"
+            className="relative w-full max-w-[260px] xs:max-w-[300px] md:max-w-[360px] lg:max-w-[440px] mx-auto flex-shrink-0"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 via-cyan-500 to-indigo-500 animate-spin-slow p-[3px]">
               <div className="w-full h-full rounded-full bg-[#020617]" />
@@ -142,10 +152,10 @@ export function About() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/50 to-transparent" />
             </div>
 
-            <div className="absolute -bottom-2 -right-2 sm:-right-4 glass-strong px-4 sm:px-6 py-2.5 sm:py-3 rounded-full">
-              <div className="flex items-center gap-2">
-                <Award className="text-indigo-400 flex-shrink-0" size={18} />
-                <span className="text-white font-semibold text-sm sm:text-base whitespace-nowrap">Rookie of the Year</span>
+            <div className="absolute -bottom-2 right-0 sm:-right-4 glass-strong px-3 sm:px-6 py-2 sm:py-3 rounded-full max-w-[90%]">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Award className="text-indigo-400 flex-shrink-0" size={16} />
+                <span className="text-white font-semibold text-xs sm:text-base whitespace-nowrap">Rookie of the Year</span>
               </div>
             </div>
           </div>
@@ -157,7 +167,7 @@ export function About() {
               <span className="text-cyan-400 mono text-sm tracking-widest">ABOUT ME</span>
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-6">
+            <h2 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-6">
               Behind the{' '}
               <span className="text-gradient">Code</span>
             </h2>
@@ -186,24 +196,24 @@ export function About() {
               </div>
             </div>
 
-            <div ref={statsRef} className="grid grid-cols-3 gap-3 sm:gap-6">
-              <div className="glass p-3 sm:p-4 rounded-2xl text-center">
-                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
+            <div ref={statsRef} className="grid grid-cols-3 gap-2 xs:gap-3 sm:gap-6">
+              <div className="glass p-2 xs:p-3 sm:p-4 rounded-2xl text-center">
+                <div className="text-2xl xs:text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={4} suffix="+" />
                 </div>
-                <div className="text-xs text-slate-500 mono">YEARS EXP</div>
+                <div className="text-[10px] xs:text-xs text-slate-500 mono">YEARS EXP</div>
               </div>
-              <div className="glass p-3 sm:p-4 rounded-2xl text-center">
-                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
+              <div className="glass p-2 xs:p-3 sm:p-4 rounded-2xl text-center">
+                <div className="text-2xl xs:text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={10} suffix="+" />
                 </div>
-                <div className="text-xs text-slate-500 mono">PROJECTS</div>
+                <div className="text-[10px] xs:text-xs text-slate-500 mono">PROJECTS</div>
               </div>
-              <div className="glass p-3 sm:p-4 rounded-2xl text-center">
-                <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">
+              <div className="glass p-2 xs:p-3 sm:p-4 rounded-2xl text-center">
+                <div className="text-2xl xs:text-3xl md:text-4xl font-bold text-gradient mb-1">
                   <Counter end={100} suffix="%" />
                 </div>
-                <div className="text-xs text-slate-500 mono">AUTOMATION</div>
+                <div className="text-[10px] xs:text-xs text-slate-500 mono">AUTOMATION</div>
               </div>
             </div>
           </div>

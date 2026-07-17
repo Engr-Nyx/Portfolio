@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useHeadingReveal } from '../hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -188,6 +189,8 @@ export function Skills() {
   const gridRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingReveal(headingRef);
 
   const filteredSkills = activeCategory === 'All'
     ? skills
@@ -216,16 +219,25 @@ export function Skills() {
         }
       );
 
+      // Cards flip in from alternating directions with a 3D rotation,
+      // fanning out across the grid rather than rising uniformly.
       gsap.fromTo(
         grid.children,
-        { scale: 0.85, opacity: 0, y: 25 },
         {
+          rotateY: (i: number) => (i % 2 === 0 ? -90 : 90),
+          scale: 0.6,
+          opacity: 0,
+          y: 25,
+        },
+        {
+          rotateY: 0,
           scale: 1,
           opacity: 1,
           y: 0,
-          stagger: 0.04,
-          duration: 0.55,
-          ease: 'back.out(1.4)',
+          stagger: { each: 0.04, from: 'start' },
+          duration: 0.6,
+          ease: 'back.out(1.5)',
+          transformPerspective: 600,
           scrollTrigger: {
             trigger: grid,
             start: 'top 85%',
@@ -240,6 +252,11 @@ export function Skills() {
   useEffect(() => {
     // Kill any existing floating tweens before starting new ones
     gsap.killTweensOf('.skill-card');
+
+    // Floating idle animation has no purpose on touch devices (no hover
+    // concept) and costs battery/perf, so skip it there.
+    const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    if (isCoarsePointer) return;
 
     const cards = document.querySelectorAll('.skill-card');
     cards.forEach((card, i) => {
@@ -259,6 +276,7 @@ export function Skills() {
   }, [filteredSkills]);
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -306,7 +324,7 @@ export function Skills() {
             <div className="w-12 h-px bg-gradient-to-l from-transparent to-cyan-500" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
+          <h2 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
             Tech <span className="text-gradient">Arsenal</span>
           </h2>
 
@@ -319,7 +337,7 @@ export function Skills() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
+                className={`px-4 py-2 rounded-full text-sm transition-all duration-300 hover:scale-110 active:scale-95 ${
                   activeCategory === cat
                     ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]'
                     : 'glass text-slate-400 hover:text-white hover:bg-white/10'

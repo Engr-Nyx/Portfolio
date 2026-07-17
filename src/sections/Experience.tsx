@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Briefcase, Calendar, MapPin, ChevronRight, ChevronDown } from 'lucide-react';
+import { useHeadingReveal } from '../hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -100,6 +101,8 @@ export function Experience() {
   const titleRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingReveal(headingRef);
 
   const matchesSkill = (exp: ExperienceItem, skill: string) => {
     if (skill === 'All') return true;
@@ -151,25 +154,44 @@ export function Experience() {
         }
       );
 
-      const cards = timeline.querySelectorAll('.experience-card');
-      cards.forEach((card) => {
-        gsap.fromTo(
-          card,
-          {
-            y: 50,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-            },
-          }
-        );
+      // Cards slide in from the side they sit on (alternating left/right on
+      // the timeline) once there's room for the alternating layout; on
+      // narrow single-column screens they rise from below instead.
+      const mm = gsap.matchMedia();
+      const cards = Array.from(timeline.querySelectorAll('.experience-card'));
+
+      mm.add('(min-width: 640px)', () => {
+        cards.forEach((card, i) => {
+          const isLeft = i % 2 === 0;
+          gsap.fromTo(
+            card,
+            { x: isLeft ? -80 : 80, opacity: 0, rotate: isLeft ? -2 : 2 },
+            {
+              x: 0,
+              opacity: 1,
+              rotate: 0,
+              duration: 0.85,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: card, start: 'top 85%' },
+            }
+          );
+        });
+      });
+
+      mm.add('(max-width: 639px)', () => {
+        cards.forEach((card) => {
+          gsap.fromTo(
+            card,
+            { y: 50, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: card, start: 'top 85%' },
+            }
+          );
+        });
       });
     }, section);
 
@@ -190,7 +212,7 @@ export function Experience() {
             <div className="w-12 h-px bg-gradient-to-l from-transparent to-cyan-500" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
+          <h2 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4">
             Career <span className="text-gradient">Path</span>
           </h2>
 
@@ -203,7 +225,7 @@ export function Experience() {
               <button
                 key={skill}
                 onClick={() => setSelectedSkill(skill)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                className={`relative px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-110 active:scale-95 ${
                   selectedSkill === skill
                     ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]'
                     : 'glass text-slate-400 hover:text-white'
@@ -219,10 +241,8 @@ export function Experience() {
         <div ref={timelineRef} className="relative">
           <div
             ref={lineRef}
-            className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 origin-top hidden sm:block"
+            className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 origin-top"
           />
-
-          <div className="absolute left-4 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 sm:hidden" />
 
           <div className="space-y-12">
             {experiences.map((exp, index) => {

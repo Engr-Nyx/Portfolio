@@ -5,12 +5,21 @@ import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, ArrowUpRight } fr
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { handleSpotlight } from '@/lib/spotlight';
+import { useMagnetic } from '@/hooks/use-magnetic';
+import { useHeadingReveal } from '@/hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const infoColRef = useRef<HTMLDivElement>(null);
+  const formCardRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const submitMagnetRef = useMagnetic<HTMLButtonElement>(0.2);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingReveal(headingRef);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,20 +35,55 @@ export function Contact() {
     if (!section || !content) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        content,
-        { scale: 1.1, opacity: 0 },
-        { 
-          scale: 1, 
-          opacity: 1, 
-          duration: 1.2, 
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 70%', // Animates into place when in view
+      // Info column slides in from the left...
+      if (infoColRef.current) {
+        gsap.fromTo(
+          infoColRef.current.children,
+          { x: -50, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: section, start: 'top 70%' },
           }
-        }
-      );
+        );
+      }
+
+      // ...the form card pops in from the right...
+      if (formCardRef.current) {
+        gsap.fromTo(
+          formCardRef.current,
+          { x: 50, opacity: 0, scale: 0.96 },
+          {
+            x: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: section, start: 'top 70%' },
+          }
+        );
+      }
+
+      // ...and its individual fields cascade in right after, so the form
+      // feels assembled rather than dropped in as one flat block.
+      if (formRef.current) {
+        gsap.fromTo(
+          formRef.current.children,
+          { y: 24, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.1,
+            delay: 0.25,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: section, start: 'top 70%' },
+          }
+        );
+      }
     }, section);
 
     return () => ctx.revert();
@@ -102,7 +146,7 @@ export function Contact() {
             <div className="w-12 h-px bg-gradient-to-l from-transparent to-cyan-500" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white font-['Space_Grotesk'] mb-4">
+          <h2 ref={headingRef} className="text-4xl md:text-5xl lg:text-6xl font-bold text-white font-['Space_Grotesk'] mb-4">
             Let's Build{' '}
             <span className="text-gradient">Quality</span>
           </h2>
@@ -113,7 +157,7 @@ export function Contact() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          <div>
+          <div ref={infoColRef}>
             <h3 className="text-2xl font-bold text-white mb-6">Get in Touch</h3>
             
             <div className="space-y-4 mb-8">
@@ -126,17 +170,18 @@ export function Contact() {
                     href={item.href}
                     target={isWebLink ? '_blank' : undefined}
                     rel={isWebLink ? 'noopener noreferrer' : undefined}
-                    className="flex items-center gap-4 p-4 glass rounded-xl hover:glow-primary transition-all group"
+                    onMouseMove={handleSpotlight}
+                    className="spotlight-card flex items-center gap-4 p-4 glass rounded-xl hover:glow-primary hover:-translate-y-0.5 transition-all duration-300 group"
                     data-cursor-hover
                   >
-                    <div className="p-3 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 transition-colors">
+                    <div className="p-3 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 group-hover:scale-110 transition-all duration-300">
                       <Icon className="text-indigo-400" size={20} />
                     </div>
                     <div>
                       <p className="text-slate-500 text-sm">{item.label}</p>
                       <p className="text-white font-medium">{item.value}</p>
                     </div>
-                    <ArrowUpRight className="ml-auto text-slate-600 group-hover:text-indigo-400 transition-colors" size={20} />
+                    <ArrowUpRight className="ml-auto text-slate-600 group-hover:text-indigo-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" size={20} />
                   </a>
                 );
               })}
@@ -165,7 +210,7 @@ export function Contact() {
             </div>
           </div>
 
-          <div className="glass p-8 rounded-3xl">
+          <div ref={formCardRef} className="glass p-8 rounded-3xl">
             {submitted ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -182,7 +227,7 @@ export function Contact() {
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="block text-slate-400 text-sm mb-2">Your Name</label>
                   <Input
@@ -220,9 +265,10 @@ export function Contact() {
                 </div>
 
                 <Button
+                  ref={submitMagnetRef}
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold py-6"
+                  className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold py-6 transition-transform active:scale-[0.97]"
                   data-cursor-hover
                 >
                   {isSubmitting ? (

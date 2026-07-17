@@ -51,8 +51,8 @@ export function GradientBackground() {
       orbs.forEach((orb, i) => {
         const offsetX = Math.sin(time * orb.speed + i * 2) * 100;
         const offsetY = Math.cos(time * orb.speed + i * 2) * 100;
-        const mouseInfluenceX = (mouseRef.current.x - 0.5) * 50;
-        const mouseInfluenceY = (mouseRef.current.y - 0.5) * 50;
+        const mouseInfluenceX = (mouseRef.current.x - 0.5) * 180;
+        const mouseInfluenceY = (mouseRef.current.y - 0.5) * 180;
 
         const x = orb.x * width + offsetX + mouseInfluenceX;
         const y = orb.y * height + offsetY + mouseInfluenceY;
