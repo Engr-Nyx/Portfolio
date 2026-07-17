@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Smartphone, Globe, Swords, type LucideIcon } from 'lucide-react';
+import { Smartphone, Globe, Swords, Cloud, Boxes, Bot, ChevronDown, type LucideIcon } from 'lucide-react';
 import { useHeadingReveal } from '../hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -77,14 +77,14 @@ const skills: Skill[] = [
   },
   {
     name: 'Perfecto',
-    svgPath: 'M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 2c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 12 6zm-1 2h2v5h-2V8zm0 6h2v2h-2v-2z',
+    icon: Cloud,
     color: '#00B0FF',
     category: 'Testing',
     level: 85,
   },
   {
     name: 'Digital.ai',
-    svgPath: 'M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm1 5v6h6v2h-6v6h-2v-6H5v-2h6V5h2z',
+    icon: Boxes,
     color: '#6E44FF',
     category: 'Testing',
     level: 82,
@@ -140,7 +140,7 @@ const skills: Skill[] = [
   },
   {
     name: 'AI Testing',
-    svgPath: 'M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z',
+    icon: Bot,
     color: '#412991',
     category: 'Emerging',
     level: 82,
@@ -235,18 +235,33 @@ function SkillIcon({ svgPath, icon: Icon, color, size = 28, isHovered }: SkillIc
   );
 }
 
+const VISIBLE_ROWS = 5;
+const GRID_COLUMNS = 3;
+const VISIBLE_COUNT = VISIBLE_ROWS * GRID_COLUMNS;
+
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingReveal(headingRef);
 
   const filteredSkills = activeCategory === 'All'
     ? skills
     : skills.filter(s => s.category === activeCategory);
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    // Collapse back to the 3x5 preview whenever the category changes, so
+    // switching filters doesn't leave a stale "expanded" grid.
+    setShowAll(false);
+  };
+
+  const hasMore = filteredSkills.length > VISIBLE_COUNT;
+  const visibleSkills = showAll ? filteredSkills : filteredSkills.slice(0, VISIBLE_COUNT);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -325,7 +340,22 @@ export function Skills() {
     return () => {
       gsap.killTweensOf('.skill-card');
     };
-  }, [filteredSkills]);
+  }, [visibleSkills]);
+
+  // Reveal the newly-added cards with a quick pop when "Show More" expands
+  // the grid, instead of them just snapping into existence.
+  useEffect(() => {
+    if (!showAll || !gridRef.current) return;
+    const cards = gridRef.current.querySelectorAll('.skill-wrapper');
+    const newCards = Array.from(cards).slice(VISIBLE_COUNT);
+    if (newCards.length === 0) return;
+
+    gsap.fromTo(
+      newCards,
+      { opacity: 0, y: 20, scale: 0.85 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.04, ease: 'back.out(1.6)' }
+    );
+  }, [showAll]);
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.matchMedia('(pointer: coarse)').matches) return;
@@ -388,7 +418,7 @@ export function Skills() {
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => handleCategoryChange(cat)}
                 className={`px-4 py-2 rounded-full text-sm transition-all duration-300 hover:scale-110 active:scale-95 ${
                   activeCategory === cat
                     ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]'
@@ -404,9 +434,9 @@ export function Skills() {
 
         <div
           ref={gridRef}
-          className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-4 xs:gap-5 sm:gap-6 lg:gap-7"
+          className="grid grid-cols-3 gap-3 xs:gap-4 sm:gap-6 lg:gap-7 max-w-3xl mx-auto"
         >
-          {filteredSkills.map((skill) => {
+          {visibleSkills.map((skill) => {
             const isHovered = hoveredSkill === skill.name;
 
             return (
@@ -464,6 +494,22 @@ export function Skills() {
             );
           })}
         </div>
+
+        {hasMore && (
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={() => setShowAll((v) => !v)}
+              className="group flex items-center gap-2 px-5 py-2.5 rounded-full glass text-slate-300 hover:text-white hover:bg-white/10 text-sm font-medium transition-all duration-300"
+              data-cursor-hover
+            >
+              {showAll ? 'Show Fewer' : `Show More (${filteredSkills.length - VISIBLE_COUNT})`}
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-300 ${showAll ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}
+              />
+            </button>
+          </div>
+        )}
 
         <div className="mt-14 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {stats.map((stat) => (
