@@ -150,9 +150,11 @@ export function Navigation() {
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation — with iOS safe-area inset, auto-hides on scroll-down */}
+      {/* Mobile Bottom Navigation — always present on mobile viewports,
+          including the landing/hero section; only auto-hides on scroll-down
+          to give the small viewport back to content. */}
       <div
-        className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isVisible && mobileBarShown
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${mobileBarShown
             ? 'opacity-100 translate-y-0'
             : 'opacity-0 translate-y-full pointer-events-none'
           }`}

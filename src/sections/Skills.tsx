@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Smartphone, Globe, Swords, type LucideIcon } from 'lucide-react';
 import { useHeadingReveal } from '../hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface Skill {
   name: string;
-  svgPath: string;
+  /** Brand icon path (Simple Icons) — used for tools/frameworks with a real logo. */
+  svgPath?: string;
+  /** Fallback icon for concepts/skills with no official brand mark. */
+  icon?: LucideIcon;
   color: string;
   category: string;
   level: number;
@@ -141,6 +145,41 @@ const skills: Skill[] = [
     category: 'Emerging',
     level: 82,
   },
+  {
+    name: 'Mobile Testing',
+    icon: Smartphone,
+    color: '#22C55E',
+    category: 'Testing',
+    level: 92,
+  },
+  {
+    name: 'Web Testing',
+    icon: Globe,
+    color: '#0EA5E9',
+    category: 'Testing',
+    level: 90,
+  },
+  {
+    name: 'Karate',
+    icon: Swords,
+    color: '#F43F5E',
+    category: 'Testing',
+    level: 85,
+  },
+  {
+    name: 'GitHub Actions',
+    svgPath: 'M10.984 13.836a.5.5 0 0 1-.353-.146l-.745-.743a.5.5 0 1 1 .706-.708l.392.391 1.181-1.18a.5.5 0 0 1 .708.707l-1.535 1.533a.504.504 0 0 1-.354.146zm9.353-.147l1.534-1.532a.5.5 0 0 0-.707-.707l-1.181 1.18-.392-.391a.5.5 0 1 0-.706.708l.746.743a.497.497 0 0 0 .706-.001zM4.527 7.452l2.557-1.585A1 1 0 0 0 7.09 4.17L4.533 2.56A1 1 0 0 0 3 3.406v3.196a1.001 1.001 0 0 0 1.527.85zm2.03-2.436L4 6.602V3.406l2.557 1.61zM24 12.5c0 1.93-1.57 3.5-3.5 3.5a3.503 3.503 0 0 1-3.46-3h-2.08a3.503 3.503 0 0 1-3.46 3 3.502 3.502 0 0 1-3.46-3h-.558c-.972 0-1.85-.399-2.482-1.042V17c0 1.654 1.346 3 3 3h.04c.244-1.693 1.7-3 3.46-3 1.93 0 3.5 1.57 3.5 3.5S13.43 24 11.5 24a3.502 3.502 0 0 1-3.46-3H8c-2.206 0-4-1.794-4-4V9.899A5.008 5.008 0 0 1 0 5c0-2.757 2.243-5 5-5s5 2.243 5 5a5.005 5.005 0 0 1-4.952 4.998A2.482 2.482 0 0 0 7.482 12h.558c.244-1.693 1.7-3 3.46-3a3.502 3.502 0 0 1 3.46 3h2.08a3.503 3.503 0 0 1 3.46-3c1.93 0 3.5 1.57 3.5 3.5zm-15 8c0 1.378 1.122 2.5 2.5 2.5s2.5-1.122 2.5-2.5-1.122-2.5-2.5-2.5S9 19.122 9 20.5zM5 9c2.206 0 4-1.794 4-4S7.206 1 5 1 1 2.794 1 5s1.794 4 4 4zm9 3.5c0-1.378-1.122-2.5-2.5-2.5S9 11.122 9 12.5s1.122 2.5 2.5 2.5 2.5-1.122 2.5-2.5zm9 0c0-1.378-1.122-2.5-2.5-2.5S18 11.122 18 12.5s1.122 2.5 2.5 2.5 2.5-1.122 2.5-2.5zm-13 8a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0zm2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0zm12 0c0 1.93-1.57 3.5-3.5 3.5a3.503 3.503 0 0 1-3.46-3.002c-.007.001-.013.005-.021.005l-.506.017h-.017a.5.5 0 0 1-.016-.999l.506-.017c.018-.002.035.006.052.007A3.503 3.503 0 0 1 20.5 17c1.93 0 3.5 1.57 3.5 3.5zm-1 0c0-1.378-1.122-2.5-2.5-2.5S18 19.122 18 20.5s1.122 2.5 2.5 2.5 2.5-1.122 2.5-2.5z',
+    color: '#2088FF',
+    category: 'DevOps',
+    level: 90,
+  },
+  {
+    name: 'Bash',
+    svgPath: 'M21.038,4.9l-7.577-4.498C13.009,0.134,12.505,0,12,0c-0.505,0-1.009,0.134-1.462,0.403L2.961,4.9 C2.057,5.437,1.5,6.429,1.5,7.503v8.995c0,1.073,0.557,2.066,1.462,2.603l7.577,4.497C10.991,23.866,11.495,24,12,24 c0.505,0,1.009-0.134,1.461-0.402l7.577-4.497c0.904-0.537,1.462-1.529,1.462-2.603V7.503C22.5,6.429,21.943,5.437,21.038,4.9z M15.17,18.946l0.013,0.646c0.001,0.078-0.05,0.167-0.111,0.198l-0.383,0.22c-0.061,0.031-0.111-0.007-0.112-0.085L14.57,19.29 c-0.328,0.136-0.66,0.169-0.872,0.084c-0.04-0.016-0.057-0.075-0.041-0.142l0.139-0.584c0.011-0.046,0.036-0.092,0.069-0.121 c0.012-0.011,0.024-0.02,0.036-0.026c0.022-0.011,0.043-0.014,0.062-0.006c0.229,0.077,0.521,0.041,0.802-0.101 c0.357-0.181,0.596-0.545,0.592-0.907c-0.003-0.328-0.181-0.465-0.613-0.468c-0.55,0.001-1.064-0.107-1.072-0.917 c-0.007-0.667,0.34-1.361,0.889-1.8l-0.007-0.652c-0.001-0.08,0.048-0.168,0.111-0.2l0.37-0.236 c0.061-0.031,0.111,0.007,0.112,0.087l0.006,0.653c0.273-0.109,0.511-0.138,0.726-0.088c0.047,0.012,0.067,0.076,0.048,0.151 l-0.144,0.578c-0.011,0.044-0.036,0.088-0.065,0.116c-0.012,0.012-0.025,0.021-0.038,0.028c-0.019,0.01-0.038,0.013-0.057,0.009 c-0.098-0.022-0.332-0.073-0.699,0.113c-0.385,0.195-0.52,0.53-0.517,0.778c0.003,0.297,0.155,0.387,0.681,0.396 c0.7,0.012,1.003,0.318,1.01,1.023C16.105,17.747,15.736,18.491,15.17,18.946z M19.143,17.859c0,0.06-0.008,0.116-0.058,0.145 l-1.916,1.164c-0.05,0.029-0.09,0.004-0.09-0.056v-0.494c0-0.06,0.037-0.093,0.087-0.122l1.887-1.129 c0.05-0.029,0.09-0.004,0.09,0.056V17.859z M20.459,6.797l-7.168,4.427c-0.894,0.523-1.553,1.109-1.553,2.187v8.833 c0,0.645,0.26,1.063,0.66,1.184c-0.131,0.023-0.264,0.039-0.398,0.039c-0.42,0-0.833-0.114-1.197-0.33L3.226,18.64 c-0.741-0.44-1.201-1.261-1.201-2.142V7.503c0-0.881,0.46-1.702,1.201-2.142l7.577-4.498c0.363-0.216,0.777-0.33,1.197-0.33 c0.419,0,0.833,0.114,1.197,0.33l7.577,4.498c0.624,0.371,1.046,1.013,1.164,1.732C21.686,6.557,21.12,6.411,20.459,6.797z',
+    color: '#4EAA25',
+    category: 'Systems',
+    level: 85,
+  },
 ];
 
 const categories = ['All', 'Languages', 'Testing', 'DevOps', 'Systems', 'Emerging'];
@@ -162,13 +201,26 @@ function computeStats() {
 const stats = computeStats();
 
 interface SkillIconProps {
-  svgPath: string;
+  svgPath?: string;
+  icon?: LucideIcon;
   color: string;
   size?: number;
   isHovered: boolean;
 }
 
-function SkillIcon({ svgPath, color, size = 28, isHovered }: SkillIconProps) {
+function SkillIcon({ svgPath, icon: Icon, color, size = 28, isHovered }: SkillIconProps) {
+  if (Icon) {
+    return (
+      <Icon
+        size={size}
+        color={isHovered ? color : undefined}
+        strokeWidth={1.75}
+        className={`transition-all duration-300 ${isHovered ? '' : 'text-slate-400'}`}
+        aria-hidden="true"
+      />
+    );
+  }
+
   return (
     <svg
       width={size}
@@ -352,7 +404,7 @@ export function Skills() {
 
         <div
           ref={gridRef}
-          className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 sm:gap-6 lg:gap-8"
+          className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-4 xs:gap-5 sm:gap-6 lg:gap-7"
         >
           {filteredSkills.map((skill) => {
             const isHovered = hoveredSkill === skill.name;
@@ -368,21 +420,22 @@ export function Skills() {
                   <div
                     onMouseMove={handleCardMouseMove}
                     onMouseLeave={handleCardMouseLeave}
-                    className={`relative p-3 sm:p-4 glass rounded-2xl transition-all duration-300 cursor-default ${
+                    className={`relative flex flex-col justify-center min-h-[108px] sm:min-h-[124px] p-4 sm:p-5 glass rounded-2xl transition-all duration-300 cursor-default ${
                       isHovered ? 'scale-105 z-10' : ''
                     }`}
                   style={isHovered ? { boxShadow: `0 0 24px ${skill.color}40, 0 0 48px ${skill.color}15` } : {}}
                 >
-                  <div className="flex justify-center mb-2 sm:mb-3">
+                  <div className="flex justify-center mb-2.5 sm:mb-3">
                     <SkillIcon
                       svgPath={skill.svgPath}
+                      icon={skill.icon}
                       color={skill.color}
                       size={26}
                       isHovered={isHovered}
                     />
                   </div>
 
-                  <p className="text-center text-xs text-white font-medium mb-2 leading-tight">
+                  <p className="text-center text-xs text-white font-medium mb-2 leading-snug">
                     {skill.name}
                   </p>
 
