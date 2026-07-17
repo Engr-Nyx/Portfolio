@@ -288,7 +288,7 @@ export function Experience() {
                         >
                         <div
                           onMouseMove={handleSpotlight}
-                          className="spotlight-card glass p-6 sm:p-8 rounded-2xl transition-all duration-300 group cursor-pointer border border-white/10 shadow-[0_0_0_1px_rgba(99,102,241,0.08),0_12px_40px_-12px_rgba(99,102,241,0.35)] hover:border-indigo-500/30 hover:shadow-[0_0_0_1px_rgba(99,102,241,0.2),0_0_45px_-5px_rgba(6,182,212,0.4),0_0_90px_-10px_rgba(99,102,241,0.3)] hover:-translate-y-1"
+                          className="spotlight-card glass p-6 sm:p-8 rounded-2xl transition-all duration-300 group cursor-pointer border border-white/10 shadow-[0_8px_30px_-14px_rgba(99,102,241,0.3)] hover:border-indigo-500/25 hover:shadow-[0_16px_50px_-16px_rgba(99,102,241,0.45)] hover:-translate-y-1"
                           onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
                         >
                       <div className="flex items-start justify-between mb-5 gap-4">
