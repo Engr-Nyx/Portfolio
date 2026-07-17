@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Briefcase, Calendar, MapPin, ChevronRight, ChevronDown } from 'lucide-react';
 import { useHeadingReveal } from '../hooks/use-heading-reveal';
+import { handleSpotlight } from '../lib/spotlight';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -276,7 +277,7 @@ export function Experience() {
                     <div className="overflow-hidden">
                       <div
                         ref={(el) => { cardRefs.current[index] = el; }}
-                        className="experience-card relative pb-12 last:pb-0"
+                        className="experience-card relative pb-14 sm:pb-16 last:pb-0"
                       >
                         <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
 
@@ -286,12 +287,13 @@ export function Experience() {
                           }`}
                         >
                         <div
-                          className="glass p-6 rounded-2xl hover:glow-primary transition-all duration-300 group cursor-pointer"
+                          onMouseMove={handleSpotlight}
+                          className="spotlight-card glass p-6 sm:p-8 rounded-2xl transition-all duration-300 group cursor-pointer border border-white/10 shadow-[0_0_0_1px_rgba(99,102,241,0.08),0_12px_40px_-12px_rgba(99,102,241,0.35)] hover:border-indigo-500/30 hover:shadow-[0_0_0_1px_rgba(99,102,241,0.2),0_0_45px_-5px_rgba(6,182,212,0.4),0_0_90px_-10px_rgba(99,102,241,0.3)] hover:-translate-y-1"
                           onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
                         >
-                      <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-start justify-between mb-5 gap-4">
                         <div>
-                          <h3 className="text-xl font-bold text-white mb-1 group-hover:text-gradient transition-colors select-none">
+                          <h3 className="text-xl font-bold text-white mb-1.5 group-hover:text-gradient transition-colors select-none">
                             {exp.title}
                           </h3>
                           <div className="flex items-center gap-2 text-indigo-400">
@@ -305,12 +307,12 @@ export function Experience() {
                         />
                       </div>
 
-                      <div className="flex flex-wrap gap-4 text-sm text-slate-500 mb-4 select-none">
-                        <div className="flex items-center gap-1">
+                      <div className="flex flex-wrap gap-4 sm:gap-5 text-sm text-slate-500 mb-5 select-none">
+                        <div className="flex items-center gap-1.5">
                           <Calendar size={14} />
                           <span>{exp.period}</span>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1.5">
                           <MapPin size={14} />
                           <span>{exp.location}</span>
                         </div>
@@ -338,11 +340,11 @@ export function Experience() {
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2.5">
                         {exp.highlights.map((highlight) => (
                           <span
                             key={highlight}
-                            className="px-3 py-1 text-xs bg-indigo-500/20 text-indigo-300 rounded-full"
+                            className="px-3 py-1.5 text-xs bg-indigo-500/15 text-indigo-300 rounded-full border border-indigo-500/20 hover:bg-indigo-500/25 hover:border-indigo-500/40 transition-colors"
                           >
                             {highlight}
                           </span>
