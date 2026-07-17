@@ -101,6 +101,7 @@ export function Experience() {
   const titleRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingReveal(headingRef);
 
@@ -160,7 +161,7 @@ export function Experience() {
       // ...and each card rises up to meet it in the same continuous motion —
       // no fade-in pop, just a slow, scroll-tied slide that stays locked to
       // the line's own growth so the whole timeline feels like one piece.
-      const cards = Array.from(timeline.querySelectorAll('.experience-card'));
+      const cards = cardRefs.current.filter((c): c is HTMLDivElement => Boolean(c));
       cards.forEach((card) => {
         gsap.fromTo(
           card,
@@ -195,16 +196,11 @@ export function Experience() {
   // changes, then refresh ScrollTrigger so its cached trigger positions
   // account for the timeline's new (collapsed/expanded) height.
   useEffect(() => {
-    const timeline = timelineRef.current;
-    if (!timeline) return;
-
     const matchedCards = experiences
-      .map((exp, i) => (matchesSkill(exp, selectedSkill) ? i : null))
-      .filter((i): i is number => i !== null)
-      .map((i) => timeline.querySelectorAll('.experience-card')[i])
-      .filter((el): el is Element => Boolean(el));
+      .map((exp, i) => (matchesSkill(exp, selectedSkill) ? cardRefs.current[i] : null))
+      .filter((el): el is HTMLDivElement => Boolean(el));
 
-    gsap.set(matchedCards, { y: 0, opacity: 1 });
+    gsap.set(matchedCards, { y: 0, opacity: 1, overwrite: true });
 
     const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 550);
     return () => clearTimeout(refreshTimer);
@@ -250,7 +246,7 @@ export function Experience() {
           </div>
         </div>
 
-        <div ref={timelineRef} className="relative">
+        <div ref={timelineRef} className="relative overflow-x-hidden">
           <div
             ref={lineRef}
             className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 origin-top"
@@ -277,7 +273,10 @@ export function Experience() {
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <div className="experience-card relative pb-12 last:pb-0">
+                      <div
+                        ref={(el) => { cardRefs.current[index] = el; }}
+                        className="experience-card relative pb-12 last:pb-0"
+                      >
                         <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
 
                         <div
