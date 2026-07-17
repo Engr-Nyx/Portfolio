@@ -172,8 +172,11 @@ export function Experience() {
             scrollTrigger: {
               trigger: card,
               start: 'top 95%',
-              end: 'top 55%',
-              scrub: 0.5,
+              // Finishes exactly as the card's center crosses the viewport
+              // center, so it's always fully visible by the time it's
+              // actually centered on screen — not still catching up.
+              end: 'center center',
+              scrub: 0.2,
             },
           }
         );
