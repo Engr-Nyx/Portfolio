@@ -231,28 +231,33 @@ export function Experience() {
 
           <div>
             {experiences.map((exp, index) => {
-              const isLeft = index % 2 === 0;
               const isMatched = matchesSkill(exp, selectedSkill);
+              // Alternation is based on the visible (matched) order, not the
+              // raw array index — otherwise a filter that hides odd-indexed
+              // cards can leave two "left" cards in a row. Whenever the
+              // filter changes and a card's side flips, it slides across
+              // to its new side instead of jumping.
+              const visiblePosition = experiences
+                .slice(0, index + 1)
+                .filter((e) => matchesSkill(e, selectedSkill)).length - 1;
+              const isLeft = visiblePosition % 2 === 0;
 
               return (
-                <div
-                  key={`${exp.company}-${exp.period}`}
-                  className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out ${
-                    isMatched ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
-                  }`}
-                >
-                  <div className="overflow-hidden">
-                    <div
-                      className={`experience-card relative flex flex-col sm:flex-row items-start gap-8 pb-12 last:pb-0 ${
-                        isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'
-                      }`}
-                    >
-                      <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
+                  <div
+                    key={`${exp.company}-${exp.period}`}
+                    className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out ${
+                      isMatched ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="experience-card relative pb-12 last:pb-0">
+                        <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
 
-                      <div
-                        className={`ml-12 sm:ml-0 sm:w-[calc(50%-2rem)] ${isLeft ? 'sm:pr-8' : 'sm:pl-8'
+                        <div
+                          className={`ml-12 sm:ml-0 sm:w-[calc(50%-2rem)] sm:px-8 transition-transform duration-500 ease-in-out ${
+                            isLeft ? 'sm:translate-x-0' : 'sm:translate-x-[calc(100%+4rem)]'
                           }`}
-                      >
+                        >
                         <div
                           className="glass p-6 rounded-2xl hover:glow-primary transition-all duration-300 group cursor-pointer"
                           onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
