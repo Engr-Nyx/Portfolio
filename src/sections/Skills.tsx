@@ -235,8 +235,8 @@ function SkillIcon({ svgPath, icon: Icon, color, size = 28, isHovered }: SkillIc
   );
 }
 
-const VISIBLE_ROWS = 5;
-const GRID_COLUMNS = 3;
+const VISIBLE_ROWS = 3;
+const GRID_COLUMNS = 5;
 const VISIBLE_COUNT = VISIBLE_ROWS * GRID_COLUMNS;
 
 export function Skills() {
@@ -434,7 +434,7 @@ export function Skills() {
 
         <div
           ref={gridRef}
-          className="grid grid-cols-3 gap-3 xs:gap-4 sm:gap-6 lg:gap-7 max-w-3xl mx-auto"
+          className="grid grid-cols-3 xs:grid-cols-5 gap-3 xs:gap-4 sm:gap-6 lg:gap-7 max-w-5xl mx-auto"
         >
           {visibleSkills.map((skill) => {
             const isHovered = hoveredSkill === skill.name;

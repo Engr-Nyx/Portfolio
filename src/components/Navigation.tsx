@@ -20,7 +20,10 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState('hero');
   const navRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const mobileNavRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
+  const suppressHideRef = useRef(false);
+  const suppressTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     ScrollTrigger.create({
@@ -62,7 +65,10 @@ export function Navigation() {
 
       if (Math.abs(delta) < 8) return;
 
-      if (delta > 0 && y > 120) {
+      // Don't hide the bar mid-tap: a nav click triggers a smooth scroll
+      // toward the target section, which would otherwise read as
+      // scroll-down and yank the bar away right as the user used it.
+      if (delta > 0 && y > 120 && !suppressHideRef.current) {
         setMobileBarShown(false);
       } else {
         setMobileBarShown(true);
@@ -100,6 +106,15 @@ export function Navigation() {
 
     if (navigator.vibrate) navigator.vibrate(8);
 
+    // Keep the mobile bar visible through the smooth-scroll it just
+    // triggered, then let normal scroll-direction behavior resume.
+    suppressHideRef.current = true;
+    setMobileBarShown(true);
+    if (suppressTimeoutRef.current) clearTimeout(suppressTimeoutRef.current);
+    suppressTimeoutRef.current = setTimeout(() => {
+      suppressHideRef.current = false;
+    }, 1000);
+
     if (href === '#hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -109,6 +124,26 @@ export function Navigation() {
       }
     }
   };
+
+  // Spring pop whenever the mobile bar transitions between shown/hidden,
+  // instead of a flat CSS opacity/translate fade.
+  useEffect(() => {
+    const el = mobileNavRef.current;
+    if (!el) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+
+    if (mobileBarShown) {
+      gsap.fromTo(
+        el,
+        { y: 40, opacity: 0, scale: 0.92 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(1.8)' }
+      );
+    } else {
+      gsap.to(el, { y: 40, opacity: 0, scale: 0.92, duration: 0.3, ease: 'power2.in' });
+    }
+  }, [mobileBarShown]);
 
   return (
     <>
@@ -150,15 +185,15 @@ export function Navigation() {
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation — always present on mobile viewports,
-          including the landing/hero section; only auto-hides on scroll-down
-          to give the small viewport back to content. */}
+      {/* Mobile Bottom Navigation — floats just above the screen edge,
+          always present on mobile viewports including the landing/hero
+          section; only auto-hides on scroll-down (never mid-tap) to give
+          the small viewport back to content. */}
       <div
-        className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${mobileBarShown
-            ? 'opacity-100 translate-y-0'
-            : 'opacity-0 translate-y-full pointer-events-none'
+        ref={mobileNavRef}
+        className={`md:hidden fixed left-3 right-3 z-50 rounded-3xl bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)] ${mobileBarShown ? '' : 'pointer-events-none'
           }`}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        style={{ bottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
       >
         <div className="flex items-center justify-between px-1 h-[60px] relative">
           {navItems.map((item) => {
