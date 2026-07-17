@@ -140,58 +140,43 @@ export function Experience() {
         }
       );
 
+      // The line grows continuously as you scroll through the timeline
+      // (scrubbed to scroll position, not a one-shot tween)...
       gsap.fromTo(
         line,
         { scaleY: 0 },
         {
           scaleY: 1,
-          duration: 1.5,
-          ease: 'power2.out',
+          ease: 'none',
           scrollTrigger: {
             trigger: timeline,
-            start: 'top 70%',
+            start: 'top 75%',
+            end: 'bottom 60%',
+            scrub: 0.4,
           },
         }
       );
 
-      // Cards slide in from the side they sit on (alternating left/right on
-      // the timeline) once there's room for the alternating layout; on
-      // narrow single-column screens they rise from below instead.
-      const mm = gsap.matchMedia();
+      // ...and each card rises up to meet it in the same continuous motion —
+      // no fade-in pop, just a slow, scroll-tied slide that stays locked to
+      // the line's own growth so the whole timeline feels like one piece.
       const cards = Array.from(timeline.querySelectorAll('.experience-card'));
-
-      mm.add('(min-width: 640px)', () => {
-        cards.forEach((card, i) => {
-          const isLeft = i % 2 === 0;
-          gsap.fromTo(
-            card,
-            { x: isLeft ? -80 : 80, opacity: 0, rotate: isLeft ? -2 : 2 },
-            {
-              x: 0,
-              opacity: 1,
-              rotate: 0,
-              duration: 0.85,
-              ease: 'power3.out',
-              scrollTrigger: { trigger: card, start: 'top 85%' },
-            }
-          );
-        });
-      });
-
-      mm.add('(max-width: 639px)', () => {
-        cards.forEach((card) => {
-          gsap.fromTo(
-            card,
-            { y: 50, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.8,
-              ease: 'power3.out',
-              scrollTrigger: { trigger: card, start: 'top 85%' },
-            }
-          );
-        });
+      cards.forEach((card) => {
+        gsap.fromTo(
+          card,
+          { y: 90, opacity: 0.15 },
+          {
+            y: 0,
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 95%',
+              end: 'top 55%',
+              scrub: 0.5,
+            },
+          }
+        );
       });
     }, section);
 
