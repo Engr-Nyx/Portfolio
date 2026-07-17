@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { handleSpotlight } from '@/lib/spotlight';
-import { useMagnetic } from '@/hooks/use-magnetic';
 import { useHeadingReveal } from '@/hooks/use-heading-reveal';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -17,7 +16,6 @@ export function Contact() {
   const infoColRef = useRef<HTMLDivElement>(null);
   const formCardRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const submitMagnetRef = useMagnetic<HTMLButtonElement>(0.2);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingReveal(headingRef);
   const [formData, setFormData] = useState({
@@ -265,10 +263,9 @@ export function Contact() {
                 </div>
 
                 <Button
-                  ref={submitMagnetRef}
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold py-6 transition-transform active:scale-[0.97]"
+                  className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-semibold py-6 transition-colors"
                   data-cursor-hover
                 >
                   {isSubmitting ? (

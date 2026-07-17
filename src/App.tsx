@@ -100,10 +100,12 @@ function App() {
         </span>
       </button>
 
-      {/* Recruiter Mode entry point — mobile FAB, docked above bottom nav */}
+      {/* Recruiter Mode entry point — mobile FAB, docked with a clear gap
+          above the floating bottom nav so the two never crowd each other */}
       <button
         onClick={() => setIsRecruiterOpen(true)}
-        className="sm:hidden fixed bottom-[76px] right-4 z-[45] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_6px_24px_rgba(99,102,241,0.45)] active:scale-90 transition-transform recruiter-cta"
+        className="sm:hidden fixed right-4 z-[45] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_6px_24px_rgba(99,102,241,0.45)] active:scale-90 transition-transform recruiter-cta"
+        style={{ bottom: 'calc(env(safe-area-inset-bottom) + 6.5rem)' }}
         data-cursor-hover
         aria-label="Open Recruiter Mode"
       >

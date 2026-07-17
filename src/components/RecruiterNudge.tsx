@@ -31,7 +31,7 @@ export function RecruiterNudge({ onOpen }: RecruiterNudgeProps) {
 
   return (
     <div
-      className="fixed z-[44] bottom-[136px] right-4 sm:bottom-auto sm:top-[76px] sm:right-6 w-[min(280px,calc(100vw-2rem))] animate-fade-in"
+      className="fixed z-[44] bottom-[180px] right-4 sm:bottom-auto sm:top-[76px] sm:right-6 w-[min(280px,calc(100vw-2rem))] animate-fade-in"
       role="status"
     >
       <div className="relative glass-strong rounded-2xl p-4 pr-8 shadow-[0_10px_40px_rgba(0,0,0,0.5)]">

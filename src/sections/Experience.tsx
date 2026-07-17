@@ -229,7 +229,7 @@ export function Experience() {
             className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-cyan-500 to-indigo-500 origin-top"
           />
 
-          <div className="space-y-12">
+          <div>
             {experiences.map((exp, index) => {
               const isLeft = index % 2 === 0;
               const isMatched = matchesSkill(exp, selectedSkill);
@@ -237,20 +237,26 @@ export function Experience() {
               return (
                 <div
                   key={`${exp.company}-${exp.period}`}
-                  className={`experience-card relative flex flex-col sm:flex-row items-start gap-8 transition-all duration-500 ${
-                    isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'
-                  } ${isMatched ? 'opacity-100 scale-100' : 'opacity-10 scale-95 pointer-events-none'}`}
+                  className={`grid transition-[grid-template-rows,opacity] duration-500 ease-in-out ${
+                    isMatched ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                  }`}
                 >
-                  <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
-
-                  <div
-                    className={`ml-12 sm:ml-0 sm:w-[calc(50%-2rem)] ${isLeft ? 'sm:pr-8' : 'sm:pl-8'
-                      }`}
-                  >
+                  <div className="overflow-hidden">
                     <div
-                      className="glass p-6 rounded-2xl hover:glow-primary transition-all duration-300 group cursor-pointer"
-                      onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                      className={`experience-card relative flex flex-col sm:flex-row items-start gap-8 pb-12 last:pb-0 ${
+                        isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'
+                      }`}
                     >
+                      <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 border-4 border-[#020617] z-10" />
+
+                      <div
+                        className={`ml-12 sm:ml-0 sm:w-[calc(50%-2rem)] ${isLeft ? 'sm:pr-8' : 'sm:pl-8'
+                          }`}
+                      >
+                        <div
+                          className="glass p-6 rounded-2xl hover:glow-primary transition-all duration-300 group cursor-pointer"
+                          onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                        >
                       <div className="flex items-start justify-between mb-4">
                         <div>
                           <h3 className="text-xl font-bold text-white mb-1 group-hover:text-gradient transition-colors select-none">
@@ -311,6 +317,8 @@ export function Experience() {
                         ))}
                       </div>
                     </div>
+                  </div>
+                  </div>
                   </div>
                 </div>
               );

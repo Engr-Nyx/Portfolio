@@ -63,6 +63,17 @@ export function Navigation() {
       const y = window.scrollY;
       const delta = y - lastScrollY.current;
 
+      // Contact is the last section — once you're at (or near) the bottom
+      // of the page there's no more content below to make room for, so
+      // keep the bar shown rather than hiding it on the final scroll-down.
+      const nearBottom = y + window.innerHeight >= document.documentElement.scrollHeight - 4;
+
+      if (nearBottom) {
+        setMobileBarShown(true);
+        lastScrollY.current = y;
+        return;
+      }
+
       if (Math.abs(delta) < 8) return;
 
       // Don't hide the bar mid-tap: a nav click triggers a smooth scroll
@@ -113,7 +124,7 @@ export function Navigation() {
     if (suppressTimeoutRef.current) clearTimeout(suppressTimeoutRef.current);
     suppressTimeoutRef.current = setTimeout(() => {
       suppressHideRef.current = false;
-    }, 1000);
+    }, 1800);
 
     if (href === '#hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -195,7 +206,7 @@ export function Navigation() {
           }`}
         style={{ bottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
       >
-        <div className="flex items-center justify-between px-1 h-[60px] relative">
+        <div className="flex items-center justify-between gap-1 px-2.5 h-[60px] relative">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.href.replace('#', '');
