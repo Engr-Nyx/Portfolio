@@ -238,6 +238,11 @@ function SkillIcon({ svgPath, icon: Icon, color, size = 28, isHovered }: SkillIc
 const VISIBLE_ROWS = 3;
 const GRID_COLUMNS = 5;
 const VISIBLE_COUNT = VISIBLE_ROWS * GRID_COLUMNS;
+// On mobile the grid is 3 columns wide, so preview 3 cols x 2 rows.
+const MOBILE_VISIBLE_COUNT = 3 * 2;
+// Matches the `xs` breakpoint in tailwind.config.js where the grid
+// switches from 3 to 5 columns.
+const XS_MEDIA_QUERY = '(min-width: 475px)';
 
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -246,8 +251,20 @@ export function Skills() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && !window.matchMedia(XS_MEDIA_QUERY).matches
+  );
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingReveal(headingRef);
+
+  useEffect(() => {
+    const mql = window.matchMedia(XS_MEDIA_QUERY);
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(!e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  const visibleCount = isMobile ? MOBILE_VISIBLE_COUNT : VISIBLE_COUNT;
 
   const filteredSkills = activeCategory === 'All'
     ? skills
@@ -260,8 +277,8 @@ export function Skills() {
     setShowAll(false);
   };
 
-  const hasMore = filteredSkills.length > VISIBLE_COUNT;
-  const visibleSkills = showAll ? filteredSkills : filteredSkills.slice(0, VISIBLE_COUNT);
+  const hasMore = filteredSkills.length > visibleCount;
+  const visibleSkills = showAll ? filteredSkills : filteredSkills.slice(0, visibleCount);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -347,7 +364,7 @@ export function Skills() {
   useEffect(() => {
     if (!showAll || !gridRef.current) return;
     const cards = gridRef.current.querySelectorAll('.skill-wrapper');
-    const newCards = Array.from(cards).slice(VISIBLE_COUNT);
+    const newCards = Array.from(cards).slice(visibleCount);
     if (newCards.length === 0) return;
 
     gsap.fromTo(
@@ -355,7 +372,7 @@ export function Skills() {
       { opacity: 0, y: 20, scale: 0.85 },
       { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.04, ease: 'back.out(1.6)' }
     );
-  }, [showAll]);
+  }, [showAll, visibleCount]);
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.matchMedia('(pointer: coarse)').matches) return;
@@ -502,7 +519,7 @@ export function Skills() {
               className="group flex items-center gap-2 px-5 py-2.5 rounded-full glass text-slate-300 hover:text-white hover:bg-white/10 text-sm font-medium transition-all duration-300"
               data-cursor-hover
             >
-              {showAll ? 'Show Fewer' : `Show More (${filteredSkills.length - VISIBLE_COUNT})`}
+              {showAll ? 'Show Fewer' : `Show More (${filteredSkills.length - visibleCount})`}
               <ChevronDown
                 size={16}
                 className={`transition-transform duration-300 ${showAll ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}
