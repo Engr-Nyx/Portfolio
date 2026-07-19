@@ -235,14 +235,30 @@ function SkillIcon({ svgPath, icon: Icon, color, size = 28, isHovered }: SkillIc
   );
 }
 
-const VISIBLE_ROWS = 3;
-const GRID_COLUMNS = 5;
-const VISIBLE_COUNT = VISIBLE_ROWS * GRID_COLUMNS;
-// On mobile the grid is 3 columns wide, so preview 3 cols x 2 rows.
+// Preview sizes match the grid's column count at each breakpoint:
+// mobile 3 cols x 2 rows, tablet 4 cols x 3 rows, desktop 5 cols x 3 rows.
+const DESKTOP_VISIBLE_COUNT = 5 * 3;
+const TABLET_VISIBLE_COUNT = 4 * 3;
 const MOBILE_VISIBLE_COUNT = 3 * 2;
-// Matches the `xs` breakpoint in tailwind.config.js where the grid
-// switches from 3 to 5 columns.
+// `xs` breakpoint (tailwind.config.js) where the grid goes 3 -> 4 columns.
 const XS_MEDIA_QUERY = '(min-width: 475px)';
+// `lg` breakpoint where the grid goes 4 -> 5 columns.
+const LG_MEDIA_QUERY = '(min-width: 1024px)';
+
+type Viewport = 'mobile' | 'tablet' | 'desktop';
+
+function getViewport(): Viewport {
+  if (typeof window === 'undefined') return 'desktop';
+  if (window.matchMedia(LG_MEDIA_QUERY).matches) return 'desktop';
+  if (window.matchMedia(XS_MEDIA_QUERY).matches) return 'tablet';
+  return 'mobile';
+}
+
+const VISIBLE_COUNTS: Record<Viewport, number> = {
+  mobile: MOBILE_VISIBLE_COUNT,
+  tablet: TABLET_VISIBLE_COUNT,
+  desktop: DESKTOP_VISIBLE_COUNT,
+};
 
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -251,20 +267,18 @@ export function Skills() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== 'undefined' && !window.matchMedia(XS_MEDIA_QUERY).matches
-  );
+  const [viewport, setViewport] = useState<Viewport>(getViewport);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingReveal(headingRef);
 
   useEffect(() => {
-    const mql = window.matchMedia(XS_MEDIA_QUERY);
-    const onChange = (e: MediaQueryListEvent) => setIsMobile(!e.matches);
-    mql.addEventListener('change', onChange);
-    return () => mql.removeEventListener('change', onChange);
+    const queries = [window.matchMedia(XS_MEDIA_QUERY), window.matchMedia(LG_MEDIA_QUERY)];
+    const onChange = () => setViewport(getViewport());
+    queries.forEach((mql) => mql.addEventListener('change', onChange));
+    return () => queries.forEach((mql) => mql.removeEventListener('change', onChange));
   }, []);
 
-  const visibleCount = isMobile ? MOBILE_VISIBLE_COUNT : VISIBLE_COUNT;
+  const visibleCount = VISIBLE_COUNTS[viewport];
 
   const filteredSkills = activeCategory === 'All'
     ? skills
@@ -272,7 +286,7 @@ export function Skills() {
 
   const handleCategoryChange = (cat: string) => {
     setActiveCategory(cat);
-    // Collapse back to the 3x5 preview whenever the category changes, so
+    // Collapse back to the preview grid whenever the category changes, so
     // switching filters doesn't leave a stale "expanded" grid.
     setShowAll(false);
   };
@@ -451,7 +465,7 @@ export function Skills() {
 
         <div
           ref={gridRef}
-          className="grid grid-cols-3 xs:grid-cols-5 gap-3 xs:gap-4 sm:gap-6 lg:gap-7 max-w-5xl mx-auto"
+          className="grid grid-cols-3 xs:grid-cols-4 lg:grid-cols-5 gap-3 xs:gap-4 sm:gap-6 lg:gap-7 max-w-5xl mx-auto"
         >
           {visibleSkills.map((skill) => {
             const isHovered = hoveredSkill === skill.name;
